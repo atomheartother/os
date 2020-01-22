@@ -5,6 +5,8 @@ ASM_DIR=bootloader
 ASMFLAGS= -f bin -i./$(ASM_DIR)/
 ASM_SRC=$(ASM_DIR)/boot.asm
 
+QEMU=qemu-system-x86_64
+
 CC=i386-elf-gcc
 CFLAGS=-Wall -Wextra -O2
 LD=i386-elf-ld
@@ -16,6 +18,9 @@ BOOTLOADER=$(BUILD_DIR)/boot.bin
 TESTBINARY=out.bin
 
 all: $(BUILD_DIR) $(BOOTLOADER) $(TESTBINARY)
+
+boot: $(BOOTLOADER)
+	$(QEMU) $(BOOTLOADER)
 
 $(BOOTLOADER): $(ASM_SRC)
 	$(ASM) $(ASMFLAGS) $(ASM_SRC) -o $(BOOTLOADER)
