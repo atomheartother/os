@@ -1,4 +1,6 @@
 ; Switch to 32bit protected mode
+
+[bits 16]
 switch_to_pm:
     cli ; clear interrupts
     lgdt [gdt_descriptor] ; Load gdt
