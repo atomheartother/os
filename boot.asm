@@ -14,12 +14,11 @@ call print_hex
 call print_nl
 jmp $ ; jump to current address = infinite loop
 
-%include "boot_print.asm"
-%include "boot_disk.asm"
+%include "bios_print.asm"
+%include "bios_disk.asm"
 ; Fill with 510 zeros minus the size of the previous code
 times 510-($-$$) db 0
 dw 0xaa55
-
 
 times 256 dw 0xdada ; sector 2 = 512 bytes
 times 256 dw 0xface ; sector 3 = 512 bytes
