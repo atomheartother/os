@@ -1,24 +1,28 @@
 [org 0x7c00]
-mov bp, 0x8000 ; Move the stack a bit away
-mov sp, bp
-mov bx, 0x9000 ; Load sectors at this address
-mov dh, 2
-call disk_load
+    mov bp, 0x9000 ; set the stack
+    mov sp, bp
+    
+    mov bx, MSG_REAL_MODE
+    call real_print
 
-mov dx, [0x9000]
-call print_hex
-call print_nl
-
-mov dx, [0x9000 + 512]
-call print_hex
-call print_nl
-jmp $ ; jump to current address = infinite loop
+    call switch_to_pm
+    jmp $
 
 %include "bios_print.asm"
-%include "bios_disk.asm"
-; Fill with 510 zeros minus the size of the previous code
+%include "32b_gdt.asm"
+%include "32b_print.asm"
+%include "32b_switch.asm"
+
+[bits 32]
+BEGIN_PM:
+    ; After the 32bit switch, this is executed
+    mov ebx, MSG_PROT_MODE
+    call print_vga
+    jmp $
+
+MSG_REAL_MODE db "Started in 16-bit real mode", 0
+MSG_PROT_MODE db "Loaded 32-bit protected mode", 0
+
+; Padding: fill with 510 zeros minus the size of the previous code
 times 510-($-$$) db 0
 dw 0xaa55
-
-times 256 dw 0xdada ; sector 2 = 512 bytes
-times 256 dw 0xface ; sector 3 = 512 bytes

@@ -2,7 +2,7 @@
 
 ;; Print a null-terminated string
 ;; bx: Address of string
-print:
+real_print:
     pusha
     mov ah, 0x0e ; TTY mode
 .loop:
@@ -17,7 +17,7 @@ print:
     ret
 
 ;; Print a newline
-print_nl:
+real_print_nl:
     pusha
     mov ah, 0x0e
     mov al, 0xa
@@ -29,7 +29,7 @@ print_nl:
 
 ; Print a hex number (2 bytes)
 ; dx contains the value
-print_hex:
+real_print_hex:
     pusha
     mov cx, 0
 .loop:
@@ -51,7 +51,7 @@ print_hex:
     cmp cx, 4 ; Loop once per digit
     jne .loop
     mov bx, HEX_OUT
-    call print
+    call real_print
     popa
     ret
 
