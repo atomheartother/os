@@ -14,7 +14,7 @@ gdt_data:
     dw 0xffff ; Size of segment bits 0-15
     dw 0 ; Address bits 0-15
     db 0 ; Address bits 16-23
-    db 10011010b ; Flags (1001), then Type (0010) <- Different, this is a DATA segment!
+    db 10010010b ; Flags (1001), then Type (0010) <- Different, this is a DATA segment!
     db 11001111b ; Flags (1100), then Size bits 16-19
     db 0 ; Address bits 24-31
 
