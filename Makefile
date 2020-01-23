@@ -6,14 +6,16 @@ ASM_DIR = bootloader
 ASMFLAGS = -f bin -i./$(ASM_DIR)/
 
 QEMU = qemu-system-x86_64
+GDB = gdb
 
 CC = i386-elf-gcc
 CFLAGS := -Wall -Wextra
+# CFLAGS := -g
 # CFLAGS := -O2
 
 LD = i386-elf-ld
-LDFLAGS := -Ttext 0x1000 # Same offset as in boot.asm
-LDFLAGS := --oformat binary
+LD_OFFSET = -Ttext 0x1000 # Same offset as in boot.asm
+LD_BINARY = --oformat binary
 
 SOURCES = $(wildcard $(SRC_DIR)/*.c)
 OBJECTS = $(patsubst $(SRC_DIR)/%.c, build/%.o, $(SOURCES))
@@ -24,6 +26,7 @@ BOOTLOADER = $(BUILD_DIR)/boot_sector.bin
 KERNEL = $(BUILD_DIR)/kernel.bin
 ENTRY_BIN = $(BUILD_DIR)/entry.bin
 IMAGE = $(BUILD_DIR)/boot_image.bin
+KERNEL_SYMBOLS = $(BUILD_DIR)/kernel.elf
 
 all: $(IMAGE)
 
@@ -34,7 +37,10 @@ $(BOOTLOADER): $(ASM_SRC)
 	$(ASM) $(ASMFLAGS) $(ASM_SRC) -o $@
 
 $(KERNEL): $(ENTRY_BIN) $(OBJECTS)
-	$(LD) -o $@ $(LDFLAGS) $^
+	$(LD) -o $@ $(LD_OFFSET) $(LD_BINARY) $^
+
+$(KERNEL_SYMBOLS): $(ENTRY_BIN) $(OBJECTS)
+	$(LD) -o $@ $(LD_OFFSET) $^
 
 $(ENTRY_BIN): $(ENTRY_SRC)
 	$(ASM) $< -f elf -o $@
@@ -47,6 +53,10 @@ boot: $(IMAGE)
 
 $(BUILD_DIR):
 	@mkdir -p $(BUILD_DIR)
+
+debug: $(IMAGE) $(KERNEL_SYMBOLS)
+	$(QEMU) -s -fda $(IMAGE) &
+	$(GDB) -ex "target remote localhost:1234" -ex "symbol-file $(KERNEL_SYMBOLS)"
 
 clean:
 	rm -rf $(BUILD_DIR)
