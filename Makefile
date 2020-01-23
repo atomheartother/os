@@ -12,7 +12,7 @@ CFLAGS := -Wall -Wextra
 # CFLAGS := -O2
 
 LD = i386-elf-ld
-LDFLAGS := -Ttext 0x0
+LDFLAGS := -Ttext 0x1000 # Same offset as in boot.asm
 LDFLAGS := --oformat binary
 
 SOURCES = $(wildcard $(SRC_DIR)/*.c)
@@ -43,7 +43,7 @@ $(OBJECTS): $(BUILD_DIR)/%.o : $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 boot: $(IMAGE)
-	$(QEMU) $(IMAGE)
+	$(QEMU) -fda $(IMAGE)
 
 $(BUILD_DIR):
 	@mkdir -p $(BUILD_DIR)

@@ -20,17 +20,17 @@ disk_load:
 disk_error:
     ; Error in disk read
     mov bx, DISK_ERR
-    call print
+    call real_print
     mov dh, ah ; dh: Error code. dl: Disk drive that caused it
-    call print_hex
-    call print_nl
+    call real_print_hex
+    call real_print_nl
     jmp disk_err_loop
 
 sectors_err:
     ; Wrong number of sectors read
     mov bx, SECTORS_ERR
-    call print
-    call print_nl
+    call real_print
+    call real_print_nl
 
 disk_err_loop:
     ; Loop infinitely, this is a fatal error
