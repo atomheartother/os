@@ -6,11 +6,11 @@ ASM_DIR = bootloader
 ASMFLAGS = -f bin -i./$(ASM_DIR)/
 
 QEMU = qemu-system-x86_64
-GDB = gdb
+GDB = i386-elf-gdb
 
 CC = i386-elf-gcc
 CFLAGS := -Wall -Wextra
-# CFLAGS := -g
+CFLAGS := -g
 # CFLAGS := -O2
 
 LD = i386-elf-ld

@@ -14,7 +14,7 @@ int print_vga(const char* str, int line, char color) {
         vgaMemory += 2;
         counter += 1;
     }
-    return 1 + (counter / 80);
+    return (counter / 80);
 }
 
 int main() {
