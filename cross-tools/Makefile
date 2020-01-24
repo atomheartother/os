@@ -22,7 +22,7 @@ $(LD): $(LD_MAKEFILE)
 
 $(LD_MAKEFILE): $(BINUTILS_VERS)
 	@mkdir -p $(LD_BUILD)
-	cd $(LD_BUILD) && ../$(BINUTILS_VERS)/configure --target=$(TARGET) --enable-interwork --enable-multilib --disable-nls --disable-werror --prefix=$(CURRENT_DIR)
+	cd $(LD_BUILD) && ../$(BINUTILS_VERS)/configure --target=$(TARGET) --enable-interwork --enable-multilib --disable-nls --disable-werror --prefix="$(CURRENT_DIR)"
 
 $(BINUTILS_VERS): $(BINUTILS_TAR)
 	tar -xf $<
