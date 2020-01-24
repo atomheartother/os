@@ -6,11 +6,11 @@ ASM_DIR = bootloader
 ASMFLAGS = -f bin -i./$(ASM_DIR)/
 
 QEMU = qemu-system-x86_64
-GDB = ./cross-tools/bin/i386-elf-gdb
+# GDB = ./cross-tools/bin/i386-elf-gdb
 
 CC = ./cross-tools/bin/i386-elf-gcc 
 CFLAGS := -Wall -Wextra
-CFLAGS := -g
+# CFLAGS := -g
 # CFLAGS := -O2
 
 LD = ./cross-tools/bin/i386-elf-ld
@@ -28,8 +28,6 @@ KERNEL = $(BUILD_DIR)/kernel.bin
 ENTRY_BIN = $(BUILD_DIR)/entry.bin
 IMAGE = $(BUILD_DIR)/boot_image.bin
 KERNEL_SYMBOLS = $(BUILD_DIR)/kernel.elf
-
-TOOLS = $(LD) $(CC) $(GDB)
 
 all: $(IMAGE)
 
@@ -57,14 +55,17 @@ boot: $(IMAGE)
 $(BUILD_DIR):
 	@mkdir -p $(BUILD_DIR)
 
-debug: $(IMAGE) $(KERNEL_SYMBOLS)
-	$(QEMU) -s -fda $(IMAGE) &
-	$(GDB) -ex "target remote localhost:1234" -ex "symbol-file $(KERNEL_SYMBOLS)"
+# debug: $(IMAGE) $(KERNEL_SYMBOLS)
+# 	$(QEMU) -s -fda $(IMAGE) &
+# 	$(GDB) -ex "target remote localhost:1234" -ex "symbol-file $(KERNEL_SYMBOLS)"
 
 tools: $(TOOLS)
 
 $(TOOLS):
 	@$(MAKE) -C cross-tools
+
+reset: clean
+	@$(MAKE) -C cross-tools reset
 
 clean:
 	rm -rf $(BUILD_DIR)

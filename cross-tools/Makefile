@@ -46,3 +46,7 @@ $(CC_VERS): $(CC_TAR)
 $(CC_TAR):
 	curl -o $@ $(CC_URL)
 
+reset:
+	rm -rf $(CC_VERS) $(CC_TAR) $(BINUTILS_VERS) $(BINUTILS_TAR)
+	rm -rf $(CC_BUILD) $(LD_BUILD)
+	rm -rf bin i386-elf ld-build share
