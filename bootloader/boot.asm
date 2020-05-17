@@ -10,7 +10,7 @@ KERNEL_OFFSET equ 0x1000
 
     mov bx, MSG_REAL_MODE 
     call real_print
-    call real_print_nl    
+    call real_print_nl
 
     call load_kernel ; read the kernel from disk
     call switch_to_pm ; switch to protected mode
