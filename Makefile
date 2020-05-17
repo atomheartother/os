@@ -6,12 +6,10 @@ ASM_DIR = bootloader
 ASMFLAGS = -f bin -i./$(ASM_DIR)/
 
 QEMU = qemu-system-x86_64
-# GDB = ./cross-tools/bin/i386-elf-gdb
+GDB = gdb
 
 CC = ./cross-tools/bin/i386-elf-gcc 
 CFLAGS := -Wall -Wextra
-# CFLAGS := -g
-# CFLAGS := -O2
 
 LD = ./cross-tools/bin/i386-elf-ld
 LD_SOURCES=./cross-tools/binutils.tar.gz
@@ -52,18 +50,13 @@ $(OBJECTS): $(BUILD_DIR)/%.o : $(SRC_DIR)/%.c
 boot: $(IMAGE)
 	$(QEMU) -fda $(IMAGE)
 
-# In GDB:
-# set architecture i386:x86-64
-# target remote localhost:1234
-debug: $(IMAGE)
+debug: CFLAGS += -g -DDEBUG
+debug: clean $(IMAGE) $(KERNEL_SYMBOLS)
 	$(QEMU) -fda $(IMAGE) -s -S &
+	$(GDB) -ex "set architecture i386:x86-64" -ex "target remote localhost:1234" -ex "symbol-file $(KERNEL_SYMBOLS)"
 
 $(BUILD_DIR):
 	@mkdir -p $(BUILD_DIR)
-
-# debug: $(IMAGE) $(KERNEL_SYMBOLS)
-# 	$(QEMU) -s -fda $(IMAGE) &
-# 	$(GDB) -ex "target remote localhost:1234" -ex "symbol-file $(KERNEL_SYMBOLS)"
 
 tools: $(TOOLS)
 
