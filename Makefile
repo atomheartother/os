@@ -52,6 +52,12 @@ $(OBJECTS): $(BUILD_DIR)/%.o : $(SRC_DIR)/%.c
 boot: $(IMAGE)
 	$(QEMU) -fda $(IMAGE)
 
+# In GDB:
+# set architecture i386:x86-64
+# target remote localhost:1234
+debug: $(IMAGE)
+	$(QEMU) -fda $(IMAGE) -s -S &
+
 $(BUILD_DIR):
 	@mkdir -p $(BUILD_DIR)
 
