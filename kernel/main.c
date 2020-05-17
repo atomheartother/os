@@ -1,26 +1,19 @@
-int print_vga(const char* str, int line, char color) {
-    char* vgaMemory = (char*)(0xb8000 + (160 * line));
-    int counter = 0;
-    while (*str) {
-        *vgaMemory = *str;
-        *(vgaMemory + 1) = color;
-        vgaMemory += 2;
-        str += 1;
-        counter += 1;
-    }
-    while (counter % 80 != 0) {
-        *(vgaMemory) = ' ';
-        *(vgaMemory + 1) = color;
-        vgaMemory += 2;
-        counter += 1;
-    }
-    return (counter / 80);
+#include "ports.h"
+
+unsigned short getCursorPosition() {
+    unsigned short pos = 0;
+    outb(0x3D4, 0x0F);
+    pos |= inb(0x3D5);
+    outb(0x3D4, 0x0E);
+    pos |= inb(0x3D5) << 8;
+    return pos;
 }
 
 int main() {
-    print_vga("Kernel reached! :)", 0, 0xe);
-    print_vga("", 1, 0x0);
-    print_vga("No matter where you go,", 2, 0x1e);
-    print_vga("    everyone is connected", 3, 0x1e);
+    unsigned short cursorPos = getCursorPosition();
+    int offsetFromVGA = cursorPos * 2;
+    char *vga = 0xb8000;
+    vga[offsetFromVGA] = 'X';
+    vga[offsetFromVGA + 1] = 0x0f;
     return 0;
 }

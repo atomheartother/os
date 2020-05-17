@@ -1,5 +1,6 @@
 BUILD_DIR = build
-SRC_DIR = kernel
+KERNEL_DIR = kernel
+DRIVERS_DIR = drivers
 
 ASM = nasm
 ASM_DIR = bootloader
@@ -10,41 +11,48 @@ GDB = gdb
 
 CC = ./cross-tools/bin/i386-elf-gcc 
 CFLAGS := -Wall -Wextra
+CFLAGS += -I$(KERNEL_DIR)
+CFLAGS += -I$(DRIVERS_DIR)
 
 LD = ./cross-tools/bin/i386-elf-ld
 LD_SOURCES=./cross-tools/binutils.tar.gz
 LD_OFFSET = -Ttext 0x1000 # Same offset as in boot.asm
 LD_BINARY = --oformat binary
 
-KENEL_SOURCES = $(wildcard $(SRC_DIR)/*.c)
-KERNEL_OBJECTS = $(patsubst $(SRC_DIR)/%.c, build/%.o, $(KERNEL_SOURCES))
-ENTRY_SRC = $(SRC_DIR)/kernel_entry.asm
+KERNEL_SOURCES = $(wildcard $(KERNEL_DIR)/*.c)
+KERNEL_OBJECTS = $(patsubst $(KERNEL_DIR)/%.c, build/%.o, $(KERNEL_SOURCES))
+DRIVERS_SOURCES = $(wildcard $(DRIVERS_DIR)/*.c)
+DRIVERS_OBJECTS = $(patsubst $(DRIVERS_DIR)/%.c, build/%.o, $(DRIVERS_SOURCES))
+ENTRY_SRC = $(KERNEL_DIR)/kernel_entry.asm
 ASM_SRC = $(ASM_DIR)/boot.asm
 
 BOOTLOADER = $(BUILD_DIR)/boot_sector.bin
-KERNEL = $(BUILD_DIR)/kernel.bin
+OS = $(BUILD_DIR)/os.bin
 ENTRY_BIN = $(BUILD_DIR)/entry.bin
 IMAGE = $(BUILD_DIR)/boot_image.bin
 KERNEL_SYMBOLS = $(BUILD_DIR)/kernel.elf
 
 all: $(IMAGE)
 
-$(IMAGE): $(BUILD_DIR) $(BOOTLOADER) $(KERNEL)
-	cat $(BOOTLOADER) $(KERNEL) > $@
+$(IMAGE): $(BUILD_DIR) $(BOOTLOADER) $(OS)
+	cat $(BOOTLOADER) $(OS) > $@
 
 $(BOOTLOADER): $(ASM_SRC)
 	$(ASM) $(ASMFLAGS) $(ASM_SRC) -o $@
 
-$(KERNEL): $(ENTRY_BIN) $(KERNEL_OBJECTS)
+$(OS): $(ENTRY_BIN) $(KERNEL_OBJECTS) $(DRIVERS_OBJECTS)
 	$(LD) -o $@ $(LD_OFFSET) $(LD_BINARY) $^
 
-$(KERNEL_SYMBOLS): $(ENTRY_BIN) $(KERNEL_OBJECTS)
+$(KERNEL_SYMBOLS): $(ENTRY_BIN) $(KERNEL_OBJECTS) $(DRIVERS_OBJECTS)
 	$(LD) -o $@ $(LD_OFFSET) $^
 
 $(ENTRY_BIN): $(ENTRY_SRC)
 	$(ASM) $< -f elf -o $@
 
-$(KERNEL_OBJECTS): $(BUILD_DIR)/%.o : $(SRC_DIR)/%.c
+$(KERNEL_OBJECTS): $(BUILD_DIR)/%.o : $(KERNEL_DIR)/%.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(DRIVERS_OBJECTS): $(BUILD_DIR)/%.o : $(DRIVERS_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 boot: $(IMAGE)
