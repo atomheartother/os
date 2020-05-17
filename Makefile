@@ -16,8 +16,8 @@ LD_SOURCES=./cross-tools/binutils.tar.gz
 LD_OFFSET = -Ttext 0x1000 # Same offset as in boot.asm
 LD_BINARY = --oformat binary
 
-SOURCES = $(wildcard $(SRC_DIR)/*.c)
-OBJECTS = $(patsubst $(SRC_DIR)/%.c, build/%.o, $(SOURCES))
+KENEL_SOURCES = $(wildcard $(SRC_DIR)/*.c)
+KERNEL_OBJECTS = $(patsubst $(SRC_DIR)/%.c, build/%.o, $(KERNEL_SOURCES))
 ENTRY_SRC = $(SRC_DIR)/kernel_entry.asm
 ASM_SRC = $(ASM_DIR)/boot.asm
 
@@ -35,16 +35,16 @@ $(IMAGE): $(BUILD_DIR) $(BOOTLOADER) $(KERNEL)
 $(BOOTLOADER): $(ASM_SRC)
 	$(ASM) $(ASMFLAGS) $(ASM_SRC) -o $@
 
-$(KERNEL): $(ENTRY_BIN) $(OBJECTS)
+$(KERNEL): $(ENTRY_BIN) $(KERNEL_OBJECTS)
 	$(LD) -o $@ $(LD_OFFSET) $(LD_BINARY) $^
 
-$(KERNEL_SYMBOLS): $(ENTRY_BIN) $(OBJECTS)
+$(KERNEL_SYMBOLS): $(ENTRY_BIN) $(KERNEL_OBJECTS)
 	$(LD) -o $@ $(LD_OFFSET) $^
 
 $(ENTRY_BIN): $(ENTRY_SRC)
 	$(ASM) $< -f elf -o $@
 
-$(OBJECTS): $(BUILD_DIR)/%.o : $(SRC_DIR)/%.c
+$(KERNEL_OBJECTS): $(BUILD_DIR)/%.o : $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 boot: $(IMAGE)
