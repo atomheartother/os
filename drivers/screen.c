@@ -29,7 +29,7 @@ void clearScreen(void) {
     const unsigned bufferSize = MAX_COLS * MAX_ROWS;
     unsigned index = 0;
     while (index < bufferSize) {
-        printCharAtOffset(' ', index * 2, 0x0f);
+        printCharAtOffset(' ', index * 2, WHITE_ON_BLACK);
         index += 1;
     }
     setCursorOffset(0);
@@ -66,7 +66,7 @@ void printCharAtAddress(char **address, const char c, char properties) {
         *address = VGA_END_ADDRESS - (MAX_COLS * 2);
         for (char* ptr = *address ; ptr < VGA_END_ADDRESS ; ptr += 2) {
             *ptr = ' ';
-            *(ptr + 1) = 0x0f;
+            *(ptr + 1) = WHITE_ON_BLACK;
         }
     }
 }
