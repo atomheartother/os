@@ -14,6 +14,7 @@ CC = ./cross-tools/bin/i386-elf-gcc
 CFLAGS := -Wall -Wextra
 CFLAGS += -I$(KERNEL_DIR)
 CFLAGS += -I$(DRIVERS_DIR)
+CFLAGS += -I$(CPU_DIR)
 
 LD = ./cross-tools/bin/i386-elf-ld
 LD_SOURCES=./cross-tools/binutils.tar.gz

@@ -1,9 +1,11 @@
-unsigned char inb(const unsigned short port) {
-    unsigned char result;
+#include "ports.h"
+
+u8 inb(const u16 port) {
+    u8 result;
     __asm__("in %%dx, %%al" : "=a" (result) : "d" (port));
     return result;
 }
 
-void outb(const unsigned short port, const unsigned char data) {
+void outb(const u16 port, const u8 data) {
     __asm__("out %%al, %%dx" : : "a" (data), "d" (port));
 }

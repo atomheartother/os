@@ -5,29 +5,29 @@
 /* 
  * Private function prototypes
  */
-unsigned short getCursorOffset(void);
-void setCursorOffset(unsigned offset);
-void printCharAtOffset(const char c, unsigned short offset, char properties);
-void printAtOffset(const char* message, unsigned short offset, char properties);
-void getCoordsFromOffset(unsigned offset, unsigned char* row, unsigned char* col);
-unsigned short getOffsetFromCoords(unsigned char row, unsigned char col);
-void printCharAtAddress(char **address, const char c, char properties);
+u16 getCursorOffset(void);
+void setCursorOffset(u32 offset);
+void printCharAtOffset(i8 c, u16 offset, i8 properties);
+void printAtOffset(const i8* message, u16 offset, i8 properties);
+void getCoordsFromOffset(u32 offset, u8* row, u8* col);
+u16 getOffsetFromCoords(u8 row, u8 col);
+void printCharAtAddress(i8 **address, i8 c, i8 properties);
 
 /* 
  * Public functions
  */
-void printMessage(const char* message) {
+void printMessage(const i8* message) {
     printAtOffset(message, getCursorOffset(), 0x0f);
 }
 
-void printMessageAt(const char* message, unsigned row, unsigned col) {
-    const unsigned short offset = getOffsetFromCoords((unsigned char)(row & 0xFF), (unsigned char)(col & 0xFF));
+void printMessageAt(const i8* message, u32 row, u32 col) {
+    const u16 offset = getOffsetFromCoords((u8)(row & 0xFF), (u8)(col & 0xFF));
     printAtOffset(message, offset, 0x0f);
 }
 
 void clearScreen(void) {
-    const unsigned bufferSize = MAX_COLS * MAX_ROWS;
-    unsigned index = 0;
+    const u32 bufferSize = MAX_COLS * MAX_ROWS;
+    u32 index = 0;
     while (index < bufferSize) {
         printCharAtOffset(' ', index * 2, WHITE_ON_BLACK);
         index += 1;
@@ -38,8 +38,8 @@ void clearScreen(void) {
 /* 
  * Private funtions
  */
-unsigned short getCursorOffset(void) {
-    unsigned short pos = 0;
+u16 getCursorOffset(void) {
+    u16 pos = 0;
     outb(0x3D4, 0x0F);
     pos |= inb(0x3D5);
     outb(0x3D4, 0x0E);
@@ -48,14 +48,14 @@ unsigned short getCursorOffset(void) {
     return pos * 2;
 }
 
-void setCursorOffset(unsigned offset) {
+void setCursorOffset(u32 offset) {
     outb(0x3D4, 0x0F);
-    outb(0x3D5, (unsigned char)(offset & 0xFF));
+    outb(0x3D5, (u8)(offset & 0xFF));
     outb(0x3D4, 0x0E);
-    outb(0x3D5, (unsigned char)((offset >> 8) & 0xFF));
+    outb(0x3D5, (u8)((offset >> 8) & 0xFF));
 }
 
-void printCharAtAddress(char **address, const char c, char properties) {
+void printCharAtAddress(i8 **address, i8 c, i8 properties) {
     *(*address) = c;
     *(*(address + 1)) = properties;
     if (*address + 2 < VGA_END_ADDRESS) {
@@ -64,33 +64,33 @@ void printCharAtAddress(char **address, const char c, char properties) {
         // Scroll up and put the cursor back to the start of the last line.
         os_memcpy(VGA_ADDRESS, VGA_ADDRESS + MAX_COLS * 2, VGA_END_ADDRESS - (VGA_ADDRESS + MAX_COLS * 2));
         *address = VGA_END_ADDRESS - (MAX_COLS * 2);
-        for (char* ptr = *address ; ptr < VGA_END_ADDRESS ; ptr += 2) {
+        for (i8* ptr = *address ; ptr < VGA_END_ADDRESS ; ptr += 2) {
             *ptr = ' ';
             *(ptr + 1) = WHITE_ON_BLACK;
         }
     }
 }
 
-void printCharAtOffset(const char c, unsigned short offset, char properties) {
-    char* vgaMemory = VGA_ADDRESS + offset;
+void printCharAtOffset(i8 c, u16 offset, i8 properties) {
+    i8* vgaMemory = VGA_ADDRESS + offset;
     printCharAtAddress(&vgaMemory, c, properties);
-    setCursorOffset((unsigned)(vgaMemory - VGA_ADDRESS) / 2);
+    setCursorOffset((u32)(vgaMemory - VGA_ADDRESS) / 2);
 }
 
-void printAtOffset(const char* message, unsigned short offset, char properties) {
-    char* vgaMemory = VGA_ADDRESS + offset;
+void printAtOffset(const i8* message, u16 offset, i8 properties) {
+    i8* vgaMemory = VGA_ADDRESS + offset;
     while (*message) {
         printCharAtAddress(&vgaMemory, *message, properties);
         message++;
     }
-    setCursorOffset((unsigned)(vgaMemory - VGA_ADDRESS) / 2);
+    setCursorOffset((u32)(vgaMemory - VGA_ADDRESS) / 2);
 }
 
-void getCoordsFromOffset(unsigned offset, unsigned char* row, unsigned char* col) {
+void getCoordsFromOffset(u32 offset, u8* row, u8* col) {
     *row = offset / (MAX_COLS * 2);
     *col = (offset % (MAX_COLS * 2)) / 2;
 }
 
-unsigned short getOffsetFromCoords(unsigned char row, unsigned char col) {
+u16 getOffsetFromCoords(u8 row, u8 col) {
     return row * MAX_COLS * 2 + col * 2;
 }
