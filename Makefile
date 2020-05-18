@@ -32,6 +32,7 @@ ENTRY_BIN = $(BUILD_DIR)/entry.bin
 IMAGE = $(BUILD_DIR)/boot_image.bin
 KERNEL_SYMBOLS = $(BUILD_DIR)/kernel.elf
 
+all: CFLAGS += -O
 all: $(IMAGE)
 
 $(IMAGE): $(BUILD_DIR) $(BOOTLOADER) $(OS)
@@ -77,4 +78,4 @@ reset: clean
 clean:
 	rm -rf $(BUILD_DIR)
 
-fclean: clean all
+re: clean all
