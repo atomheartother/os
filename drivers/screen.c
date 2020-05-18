@@ -63,6 +63,10 @@ void printCharAtAddress(const char c, char **address, char properties) {
         // Scroll up and put the cursor back to the start of the last line.
         os_memcpy(VGA_ADDRESS, VGA_ADDRESS + MAX_COLS * 2, (VGA_END_ADDRESS - VGA_ADDRESS) - MAX_COLS * 2);
         *address = VGA_ADDRESS + (MAX_ROWS - 1) * MAX_COLS * 2;
+        for (char* ptr = *address ; ptr < VGA_END_ADDRESS ; ptr += 2) {
+            *ptr = ' ';
+            *(ptr + 1) = 0x0f;
+        }
     }
 }
 
