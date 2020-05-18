@@ -56,11 +56,11 @@ $(DRIVERS_OBJECTS): $(BUILD_DIR)/%.o : $(DRIVERS_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 boot: $(IMAGE)
-	$(QEMU) -fda $(IMAGE)
+	$(QEMU) -drive format=raw,file=$(IMAGE)
 
 debug: CFLAGS += -g -DDEBUG
 debug: clean $(IMAGE) $(KERNEL_SYMBOLS)
-	$(QEMU) -fda $(IMAGE) -s -S &
+	$(QEMU) -drive format=raw,file=$(IMAGE) -s -S &
 	$(GDB) -ex "set architecture i386:x86-64" -ex "target remote localhost:1234" -ex "symbol-file $(KERNEL_SYMBOLS)"
 
 $(BUILD_DIR):
