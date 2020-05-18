@@ -1,5 +1,6 @@
 #include "screen.h"
 #include "ports.h"
+#include "utils.h"
 
 /* 
  * Private function prototypes
@@ -53,19 +54,28 @@ void setCursorOffset(unsigned offset) {
     outb(0x3D5, (unsigned char)((offset >> 8) & 0xFF));
 }
 
+void printCharAtAddress(const char c, char **address, char properties) {
+    *(*address) = c;
+    *(*(address + 1)) = properties;
+    if (*address + 2 < VGA_END_ADDRESS) {
+        *address = *address + 2;
+    } else {
+        // Scroll up and put the cursor back to the start of the last line.
+        os_memcpy(VGA_ADDRESS, VGA_ADDRESS + MAX_COLS * 2, (VGA_END_ADDRESS - VGA_ADDRESS) - MAX_COLS * 2);
+        *address = VGA_ADDRESS + (MAX_ROWS - 1) * MAX_COLS * 2;
+    }
+}
+
 void printCharAtOffset(const char c, unsigned short offset, char properties) {
-    char* vgaMemory = (char*)VGA_ADDRESS + offset;
-    *vgaMemory = c;
-    *(vgaMemory + 1) = properties;
+    char* vgaMemory = VGA_ADDRESS + offset;
+    printCharAtAddress(c, &vgaMemory, properties);
     setCursorOffset((unsigned)(vgaMemory - VGA_ADDRESS) / 2);
 }
 
 void printAtOffset(const char* message, unsigned short offset, char properties) {
-    char* vgaMemory = (char*)VGA_ADDRESS + offset;
+    char* vgaMemory = VGA_ADDRESS + offset;
     while (*message) {
-        *vgaMemory = *message;
-        *(vgaMemory + 1) = properties;
-        vgaMemory += 2;
+        printCharAtAddress(*message, &vgaMemory, properties);
         message++;
     }
     setCursorOffset((unsigned)(vgaMemory - VGA_ADDRESS) / 2);

@@ -2,5 +2,7 @@
 
 int main() {
     clearScreen();
-    printMessage("Hello, world!");
+    for (int i=0; i < 512 ; i++) {
+        printMessage("Hello, world!");
+    }
 }
