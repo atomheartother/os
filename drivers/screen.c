@@ -11,6 +11,7 @@ void printCharAtOffset(const char c, unsigned short offset, char properties);
 void printAtOffset(const char* message, unsigned short offset, char properties);
 void getCoordsFromOffset(unsigned offset, unsigned char* row, unsigned char* col);
 unsigned short getOffsetFromCoords(unsigned char row, unsigned char col);
+void printCharAtAddress(char **address, const char c, char properties);
 
 /* 
  * Public functions
@@ -54,15 +55,15 @@ void setCursorOffset(unsigned offset) {
     outb(0x3D5, (unsigned char)((offset >> 8) & 0xFF));
 }
 
-void printCharAtAddress(const char c, char **address, char properties) {
+void printCharAtAddress(char **address, const char c, char properties) {
     *(*address) = c;
     *(*(address + 1)) = properties;
     if (*address + 2 < VGA_END_ADDRESS) {
         *address = *address + 2;
     } else {
         // Scroll up and put the cursor back to the start of the last line.
-        os_memcpy(VGA_ADDRESS, VGA_ADDRESS + MAX_COLS * 2, (VGA_END_ADDRESS - VGA_ADDRESS) - MAX_COLS * 2);
-        *address = VGA_ADDRESS + (MAX_ROWS - 1) * MAX_COLS * 2;
+        os_memcpy(VGA_ADDRESS, VGA_ADDRESS + MAX_COLS * 2, VGA_END_ADDRESS - (VGA_ADDRESS + MAX_COLS * 2));
+        *address = VGA_END_ADDRESS - (MAX_COLS * 2);
         for (char* ptr = *address ; ptr < VGA_END_ADDRESS ; ptr += 2) {
             *ptr = ' ';
             *(ptr + 1) = 0x0f;
@@ -72,14 +73,14 @@ void printCharAtAddress(const char c, char **address, char properties) {
 
 void printCharAtOffset(const char c, unsigned short offset, char properties) {
     char* vgaMemory = VGA_ADDRESS + offset;
-    printCharAtAddress(c, &vgaMemory, properties);
+    printCharAtAddress(&vgaMemory, c, properties);
     setCursorOffset((unsigned)(vgaMemory - VGA_ADDRESS) / 2);
 }
 
 void printAtOffset(const char* message, unsigned short offset, char properties) {
     char* vgaMemory = VGA_ADDRESS + offset;
     while (*message) {
-        printCharAtAddress(*message, &vgaMemory, properties);
+        printCharAtAddress(&vgaMemory, *message, properties);
         message++;
     }
     setCursorOffset((unsigned)(vgaMemory - VGA_ADDRESS) / 2);
