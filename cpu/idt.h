@@ -23,7 +23,7 @@ typedef struct {
 extern idtEntry idt[IDT_ENTRIES];
 extern idtRegister idtReg;
 
-void fillIdtGate(idtEntry* idt, u32 address);
+void setIdtGate(u16 n, u32 address);
 void initIdt();
 
 #endif
