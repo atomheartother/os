@@ -13,6 +13,17 @@ typedef struct {
     u16     offsetH; // Highest 16b of the function address
 } __attribute__((packed)) idtEntry;
 
+typedef struct {
+    u16 limit;
+    u32 base;
+} __attribute__((packed)) idtRegister;
+
+#define IDT_ENTRIES 256
+
+extern idtEntry idt[IDT_ENTRIES];
+extern idtRegister idtReg;
+
 void fillIdtGate(idtEntry* idt, u32 address);
+void initIdt();
 
 #endif
