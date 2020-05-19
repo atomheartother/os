@@ -1,8 +1,8 @@
 #include "screen.h"
+#include "isr.h"
 
 int main() {
     clearScreen();
-    for (int i=0; i < 512 ; i++) {
-        printMessage("Hello, world!");
-    }
+    isrInstall();
+    __asm__ __volatile__("int $2");
 }

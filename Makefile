@@ -4,8 +4,8 @@ DRIVERS_DIR = drivers
 CPU_DIR = cpu
 
 ASM = nasm
-ASM_DIR = bootloader
-ASMFLAGS = -f bin -i./$(ASM_DIR)/
+BOOT_DIR = bootloader
+BOOT_ASMFLAGS = -f bin -i./$(BOOT_DIR)/
 
 QEMU = qemu-system-x86_64
 GDB = gdb
@@ -27,9 +27,12 @@ DRIVERS_SOURCES = $(wildcard $(DRIVERS_DIR)/*.c)
 DRIVERS_OBJECTS = $(patsubst $(DRIVERS_DIR)/%.c, build/$(DRIVERS_DIR)/%.o, $(DRIVERS_SOURCES))
 CPU_SOURCES = $(wildcard $(CPU_DIR)/*.c)
 CPU_OBJECTS = $(patsubst $(CPU_DIR)/%.c, build/$(CPU_DIR)/%.o, $(CPU_SOURCES))
+CPU_ASM = $(wildcard $(CPU_DIR)/*.asm)
+CPU_ASM_OBJECTS = $(patsubst $(CPU_DIR)/%.asm, build/$(CPU_DIR)/%.asm.o, $(CPU_ASM))
+CPU_ASMFLAGS = -f elf -i./$(CPU_DIR)/
 
 ENTRY_SRC = $(KERNEL_DIR)/kernel_entry.asm
-ASM_SRC = $(ASM_DIR)/boot.asm
+ASM_SRC = $(BOOT_DIR)/boot.asm
 
 BOOTLOADER = $(BUILD_DIR)/boot_sector.bin
 OS = $(BUILD_DIR)/os.bin
@@ -44,12 +47,12 @@ $(IMAGE): $(BUILD_DIR) $(BOOTLOADER) $(OS)
 	cat $(BOOTLOADER) $(OS) > $@
 
 $(BOOTLOADER): $(ASM_SRC)
-	$(ASM) $(ASMFLAGS) $(ASM_SRC) -o $@
+	$(ASM) $(BOOT_ASMFLAGS) $(ASM_SRC) -o $@
 
-$(OS): $(ENTRY_BIN) $(KERNEL_OBJECTS) $(DRIVERS_OBJECTS) $(CPU_OBJECTS)
+$(OS): $(ENTRY_BIN) $(KERNEL_OBJECTS) $(DRIVERS_OBJECTS) $(CPU_OBJECTS) $(CPU_ASM_OBJECTS)
 	$(LD) -o $@ $(LD_OFFSET) $(LD_BINARY) $^
 
-$(KERNEL_SYMBOLS): $(ENTRY_BIN) $(KERNEL_OBJECTS) $(DRIVERS_OBJECTS) $(CPU_OBJECTS)
+$(KERNEL_SYMBOLS): $(ENTRY_BIN) $(KERNEL_OBJECTS) $(DRIVERS_OBJECTS) $(CPU_OBJECTS) $(CPU_ASM_OBJECTS)
 	$(LD) -o $@ $(LD_OFFSET) $^
 
 $(ENTRY_BIN): $(ENTRY_SRC)
@@ -63,6 +66,9 @@ $(DRIVERS_OBJECTS): $(BUILD_DIR)/$(DRIVERS_DIR)%.o : $(DRIVERS_DIR)/%.c
 
 $(CPU_OBJECTS): $(BUILD_DIR)/$(CPU_DIR)%.o : $(CPU_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
+
+$(CPU_ASM_OBJECTS): $(BUILD_DIR)/$(CPU_DIR)%.asm.o : $(CPU_DIR)/%.asm
+	$(ASM) $(CPU_ASMFLAGS) $< -o $@
 
 boot: $(IMAGE)
 	$(QEMU) -drive format=raw,file=$(IMAGE)

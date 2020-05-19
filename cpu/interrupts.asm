@@ -19,7 +19,7 @@ isrCommonCode:
     mov fs, ax
     mov gs, ax
     popa
-    add esp 0x08 ; Cleans up the stuff pushed by the isrXX functions
+    add esp, 0x08 ; Cleans up the stuff pushed by the isrXX functions
     sti ; Re-enable interrupts
     iret
 
@@ -216,13 +216,13 @@ isr1A:
 isr1B:
     cli
     push byte 0
-    push byte 
+    push byte 0x1B
     jmp isrCommonCode
 
 isr1C:
     cli
     push byte 0
-    push byte 0x1B
+    push byte 0x1C
     jmp isrCommonCode
 
 isr1D:
