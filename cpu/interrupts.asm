@@ -1,7 +1,8 @@
 ; Defined in isr.c
 [extern isrHandler]
+[extern irqHandler]
 
-isrCommonCode:
+preHandler:
     pusha
     mov ax, ds
     push eax ; Push the current data segment
@@ -10,9 +11,9 @@ isrCommonCode:
     mov es, ax
     mov fs, ax
     mov gs, ax
+    ret 
 
-    call isrHandler
-
+postHandler:
     pop eax
     mov ds, ax ; Set segments to the original value
     mov es, ax
@@ -22,6 +23,17 @@ isrCommonCode:
     add esp, 0x08 ; Cleans up the stuff pushed by the isrXX functions
     sti ; Re-enable interrupts
     iret
+
+isrCommonCode:
+    call preHandler
+    call isrHandler
+    call postHandler
+
+irqCommonCode:
+    call preHandler
+    call irqHandler
+    pop ebx
+    call postHandler
 
 global isr00
 global isr01
@@ -55,6 +67,23 @@ global isr1C
 global isr1D
 global isr1E
 global isr1F
+
+global irq00
+global irq01
+global irq02
+global irq03
+global irq04
+global irq05
+global irq06
+global irq07
+global irq08
+global irq09
+global irq0A
+global irq0B
+global irq0C
+global irq0D
+global irq0E
+global irq0F
 
 isr00:
     cli
@@ -242,3 +271,99 @@ isr1F:
     push byte 0
     push byte 0x1F
     jmp isrCommonCode
+
+irq00:
+    cli
+    push byte 0x00
+    push byte 0x00
+    jmp irqCommonCode
+
+irq01:
+    cli
+    push byte 0x00
+    push byte 0x01
+    jmp irqCommonCode
+
+irq02:
+    cli
+    push byte 0x00
+    push byte 0x02
+    jmp irqCommonCode
+
+irq03:
+    cli
+    push byte 0x00
+    push byte 0x03
+    jmp irqCommonCode
+
+irq04:
+    cli
+    push byte 0x00
+    push byte 0x04
+    jmp irqCommonCode
+
+irq05:
+    cli
+    push byte 0x00
+    push byte 0x05
+    jmp irqCommonCode
+
+irq06:
+    cli
+    push byte 0x00
+    push byte 0x06
+    jmp irqCommonCode
+
+irq07:
+    cli
+    push byte 0x00
+    push byte 0x07
+    jmp irqCommonCode
+
+irq08:
+    cli
+    push byte 0x00
+    push byte 0x08
+    jmp irqCommonCode
+
+irq09:
+    cli
+    push byte 0x00
+    push byte 0x09
+    jmp irqCommonCode
+
+irq0A:
+    cli
+    push byte 0x00
+    push byte 0x0A
+    jmp irqCommonCode
+
+irq0B:
+    cli
+    push byte 0x00
+    push byte 0x0B
+    jmp irqCommonCode
+
+irq0C:
+    cli
+    push byte 0x00
+    push byte 0x0C
+    jmp irqCommonCode
+
+irq0D:
+    cli
+    push byte 0x00
+    push byte 0x0D
+    jmp irqCommonCode
+
+irq0E:
+    cli
+    push byte 0x00
+    push byte 0x0E
+    jmp irqCommonCode
+
+irq0F:
+    cli
+    push byte 0x00
+    push byte 0x0F
+    jmp irqCommonCode
