@@ -32,7 +32,8 @@ CPU_ASM_OBJECTS = $(patsubst $(CPU_DIR)/%.asm, build/$(CPU_DIR)/%.asm.o, $(CPU_A
 CPU_ASMFLAGS = -f elf -i./$(CPU_DIR)/
 
 ENTRY_SRC = $(KERNEL_DIR)/kernel_entry.asm
-ASM_SRC = $(BOOT_DIR)/boot.asm
+ASM_BOOTFILE = $(BOOT_DIR)/boot.asm
+ASM_SRC = $(wildcard $(BOOT_DIR)/*.asm)
 
 BOOTLOADER = $(BUILD_DIR)/boot_sector.bin
 OS = $(BUILD_DIR)/os.bin
@@ -47,7 +48,7 @@ $(IMAGE): $(BUILD_DIR) $(BOOTLOADER) $(OS)
 	cat $(BOOTLOADER) $(OS) > $@
 
 $(BOOTLOADER): $(ASM_SRC)
-	$(ASM) $(BOOT_ASMFLAGS) $(ASM_SRC) -o $@
+	$(ASM) $(BOOT_ASMFLAGS) $(ASM_BOOTFILE) -o $@
 
 $(OS): $(ENTRY_BIN) $(KERNEL_OBJECTS) $(DRIVERS_OBJECTS) $(CPU_OBJECTS) $(CPU_ASM_OBJECTS)
 	$(LD) -o $@ $(LD_OFFSET) $(LD_BINARY) $^
