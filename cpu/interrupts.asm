@@ -2,7 +2,7 @@
 [extern isrHandler]
 [extern irqHandler]
 
-preHandler:
+isrCommonCode:
     pusha
     mov ax, ds
     push eax ; Push the current data segment
@@ -11,9 +11,9 @@ preHandler:
     mov es, ax
     mov fs, ax
     mov gs, ax
-    ret 
 
-postHandler:
+    call isrHandler
+
     pop eax
     mov ds, ax ; Set segments to the original value
     mov es, ax
@@ -24,16 +24,28 @@ postHandler:
     sti ; Re-enable interrupts
     iret
 
-isrCommonCode:
-    call preHandler
-    call isrHandler
-    call postHandler
-
 irqCommonCode:
-    call preHandler
+    pusha
+    mov ax, ds
+    push eax ; Push the current data segment
+    mov ax, 0x10
+    mov ds, ax ; Set segments to kernel data segment descriptor
+    mov es, ax
+    mov fs, ax
+    mov gs, ax
+
     call irqHandler
     pop ebx
-    call postHandler
+
+    pop eax
+    mov ds, ax ; Set segments to the original value
+    mov es, ax
+    mov fs, ax
+    mov gs, ax
+    popa
+    add esp, 0x08 ; Cleans up the stuff pushed by the isrXX functions
+    sti ; Re-enable interrupts
+    iret
 
 global isr00
 global isr01
