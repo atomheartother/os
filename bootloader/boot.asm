@@ -1,8 +1,16 @@
+[bits 16]
 [org 0x7c00]
 ; Where we'll load the kernel. Very important!
 ; Make sure to tell the kernel about this.
 KERNEL_OFFSET equ 0x1000
 
+    ; Ensure cs = 0x0000
+    jmp 0x0000:start
+start:
+    ; Initialize segment registers
+    xor ax, ax
+    mov ds, ax
+    mov es, ax
     ; The BIOS gives us the boot drive in dl. Save it
     mov [BOOT_DRIVE], dl
     mov bp, 0x9000
