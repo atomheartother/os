@@ -20,8 +20,9 @@ typedef struct {
 
 #define IDT_ENTRIES 256
 
-extern idtEntry idt[IDT_ENTRIES];
-extern idtRegister idtReg;
+// Tutorials mention needing these as globals but that hasn't been necessary so far...
+// extern idtEntry idt[IDT_ENTRIES];
+// extern idtRegister idtReg;
 
 void setIdtGate(u16 n, u32 address);
 void initIdt();
