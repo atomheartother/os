@@ -37,7 +37,7 @@ load_kernel:
     call real_print_nl    
 
     mov bx, KERNEL_OFFSET
-    mov dh, 6 ; TODO: do this dynamically and adapt to kernel size
+    mov dh, 9 ; TODO: do this dynamically and adapt to kernel size
     mov dl, [BOOT_DRIVE] ; On drive given by BIOS
     call disk_load
     ret
