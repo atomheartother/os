@@ -5,19 +5,19 @@
 /* 
  * Private function prototypes
  */
-u16 getCursorOffset(void);
-void setCursorOffset(u32 offset);
-void printCharAtOffset(i8 c, u16 offset, i8 properties);
-void printAtOffset(const i8* message, u16 offset, i8 properties);
-void getCoordsFromOffset(u32 offset, u8* row, u8* col);
-u16 getOffsetFromCoords(u8 row, u8 col);
-void printCharAtAddress(i8 **address, i8 c, i8 properties);
+static u16 getCursorOffset(void);
+static void setCursorOffset(u32 offset);
+static void printCharAtOffset(i8 c, u16 offset, i8 properties);
+static void printAtOffset(const i8* message, u16 offset, i8 properties);
+static void getCoordsFromOffset(u32 offset, u8* row, u8* col);
+static u16 getOffsetFromCoords(u8 row, u8 col);
+static void printCharAtAddress(i8 **address, i8 c, i8 properties);
 
 /* 
  * Public functions
  */
 void printMessage(const i8* message) {
-    printAtOffset(message, getCursorOffset(), 0x0f);
+    printAtOffset(message, getCursorOffset(), WHITE_ON_BLACK);
 }
 
 void printMessageAt(const i8* message, u32 row, u32 col) {
@@ -35,10 +35,20 @@ void clearScreen(void) {
     setCursorOffset(0);
 }
 
+void newline(void) {
+    u8 row;
+    u8 col;
+    getCoordsFromOffset(getCursorOffset(), &row, &col);
+    while (col < MAX_COLS) {
+        printCharAtOffset(' ', getCursorOffset(), WHITE_ON_BLACK);
+        col += 1;
+    }
+}
+
 /* 
  * Private funtions
  */
-u16 getCursorOffset(void) {
+static u16 getCursorOffset(void) {
     u16 pos = 0;
     outb(0x3D4, 0x0F);
     pos |= inb(0x3D5);
@@ -48,14 +58,14 @@ u16 getCursorOffset(void) {
     return pos * 2;
 }
 
-void setCursorOffset(u32 offset) {
+static void setCursorOffset(u32 offset) {
     outb(0x3D4, 0x0F);
     outb(0x3D5, (u8)(offset & 0xFF));
     outb(0x3D4, 0x0E);
     outb(0x3D5, (u8)((offset >> 8) & 0xFF));
 }
 
-void printCharAtAddress(i8 **address, i8 c, i8 properties) {
+static void printCharAtAddress(i8 **address, i8 c, i8 properties) {
     *(*address) = c;
     *(*(address + 1)) = properties;
     if (*address + 2 < VGA_END_ADDRESS) {
@@ -71,13 +81,13 @@ void printCharAtAddress(i8 **address, i8 c, i8 properties) {
     }
 }
 
-void printCharAtOffset(i8 c, u16 offset, i8 properties) {
+static void printCharAtOffset(i8 c, u16 offset, i8 properties) {
     i8* vgaMemory = VGA_ADDRESS + offset;
     printCharAtAddress(&vgaMemory, c, properties);
     setCursorOffset((u32)(vgaMemory - VGA_ADDRESS) / 2);
 }
 
-void printAtOffset(const i8* message, u16 offset, i8 properties) {
+static void printAtOffset(const i8* message, u16 offset, i8 properties) {
     i8* vgaMemory = VGA_ADDRESS + offset;
     while (*message) {
         printCharAtAddress(&vgaMemory, *message, properties);
@@ -86,11 +96,11 @@ void printAtOffset(const i8* message, u16 offset, i8 properties) {
     setCursorOffset((u32)(vgaMemory - VGA_ADDRESS) / 2);
 }
 
-void getCoordsFromOffset(u32 offset, u8* row, u8* col) {
+static void getCoordsFromOffset(u32 offset, u8* row, u8* col) {
     *row = offset / (MAX_COLS * 2);
     *col = (offset % (MAX_COLS * 2)) / 2;
 }
 
-u16 getOffsetFromCoords(u8 row, u8 col) {
+static u16 getOffsetFromCoords(u8 row, u8 col) {
     return row * MAX_COLS * 2 + col * 2;
 }

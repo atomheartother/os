@@ -12,6 +12,7 @@
 
 void printMessage(const i8* message);
 void printMessageAt(const i8* message, u32 row, u32 col);
+void newline();
 void clearScreen(void);
 
 #endif

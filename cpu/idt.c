@@ -1,4 +1,6 @@
 #include "idt.h"
+#include "utils.h"
+#include "screen.h"
 
 idtEntry idt[IDT_ENTRIES];
 idtRegister idtReg;

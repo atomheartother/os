@@ -3,7 +3,6 @@
 
 #include "types.h"
 
-// https://en.wikipedia.org/wiki/Interrupt_descriptor_table#Hardware-generated_exceptions
 extern void isr00();
 extern void isr01();
 extern void isr02();
@@ -57,11 +56,32 @@ extern void irq0F();
 
 // ISR are 0-31
 # define ISR_START 0x00
+// The number of ISRs as per https://en.wikipedia.org/wiki/Interrupt_descriptor_table#Hardware-generated_exceptions
 # define ISR_COUNT 0x20
 
 // IRQ are 32-47
 # define IRQ_START 0x20
 # define IRQ_COUNT 0x10
+
+// IRQ values from: https://en.wikipedia.org/wiki/Interrupt_request_%28PC_architecture%29
+// IRQ0 triggers the system timer
+#define IRQ0 IRQ_START + 0
+// IRQ1 is the keyboard interrupt handler
+#define IRQ1 IRQ_START + 1
+#define IRQ2 IRQ_START + 2
+#define IRQ3 IRQ_START + 3
+#define IRQ4 IRQ_START + 4
+#define IRQ5 IRQ_START + 5
+#define IRQ6 IRQ_START + 6
+#define IRQ7 IRQ_START + 7
+#define IRQ8 IRQ_START + 8
+#define IRQ9 IRQ_START + 9
+#define IRQ10 IRQ_START + 10
+#define IRQ11 IRQ_START + 11
+#define IRQ12 IRQ_START + 12
+#define IRQ13 IRQ_START + 13
+#define IRQ14 IRQ_START + 14
+#define IRQ15 IRQ_START + 15
 
 #define PIC1 0x20 // IO base address for master PIC 
 #define PIC2 0xA0 // IO base address for slave PIC 
