@@ -47,335 +47,78 @@ irqCommonCode:
     sti ; Re-enable interrupts
     iret
 
-global isr00
-global isr01
-global isr02
-global isr03
-global isr04
-global isr05
-global isr06
-global isr07
-global isr08
-global isr09
-global isr0A
-global isr0B
-global isr0C
-global isr0D
-global isr0E
-global isr0F
-global isr10
-global isr11
-global isr12
-global isr13
-global isr14
-global isr15
-global isr16
-global isr17
-global isr18
-global isr19
-global isr1A
-global isr1B
-global isr1C
-global isr1D
-global isr1E
-global isr1F
-
-global irq00
-global irq01
-global irq02
-global irq03
-global irq04
-global irq05
-global irq06
-global irq07
-global irq08
-global irq09
-global irq0A
-global irq0B
-global irq0C
-global irq0D
-global irq0E
-global irq0F
-
-isr00:
+%macro ISR_NOERRCODE 1
+global isr%1
+isr%1:
     cli
     push byte 0
-    push byte 0x0
+    push byte %1
     jmp isrCommonCode
+%endmacro
 
-isr01:
+%macro ISR_ERRCODE 1
+global isr%1
+isr%1:
     cli
-    push byte 0
-    push byte 0x1
+    push byte %1
     jmp isrCommonCode
+%endmacro
 
-isr02:
-    cli
-    push byte 0
-    push byte 0x2
-    jmp isrCommonCode
-
-isr03:
-    cli
-    push byte 0
-    push byte 0x3
-    jmp isrCommonCode
-
-isr04:
-    cli
-    push byte 0
-    push byte 0x4
-    jmp isrCommonCode
-
-isr05:
-    cli
-    push byte 0
-    push byte 0x5
-    jmp isrCommonCode
-
-isr06:
-    cli
-    push byte 0
-    push byte 0x6
-    jmp isrCommonCode
-
-isr07:
-    cli
-    push byte 0
-    push byte 0x7
-    jmp isrCommonCode
-
-isr08:
-    cli
-    push byte 0
-    push byte 0x8
-    jmp isrCommonCode
-
-isr09:
-    cli
-    push byte 0
-    push byte 0x9
-    jmp isrCommonCode
-
-isr0A:
-    cli
-    push byte 0xA
-    jmp isrCommonCode
-
-isr0B:
-    cli
-    push byte 0xB
-    jmp isrCommonCode
-
-isr0C:
-    cli
-    push byte 0xC
-    jmp isrCommonCode
-
-isr0D:
-    cli
-    push byte 0xD
-    jmp isrCommonCode
-
-isr0E:
-    cli
-    push byte 0xE
-    jmp isrCommonCode
-
-isr0F:
-    cli
-    push byte 0
-    push byte 0xF
-    jmp isrCommonCode
-
-isr10:
-    cli
-    push byte 0
-    push byte 0x10
-    jmp isrCommonCode
-
-isr11:
-    cli
-    push byte 0
-    push byte 0x11
-    jmp isrCommonCode
-
-isr12:
-    cli
-    push byte 0
-    push byte 0x12
-    jmp isrCommonCode
-
-isr13:
-    cli
-    push byte 0
-    push byte 0x13
-    jmp isrCommonCode
-
-isr14:
-    cli
-    push byte 0
-    push byte 0x14
-    jmp isrCommonCode
-
-isr15:
-    cli
-    push byte 0
-    push byte 0x15
-    jmp isrCommonCode
-
-isr16:
-    cli
-    push byte 0
-    push byte 0x16
-    jmp isrCommonCode
-
-isr17:
-    cli
-    push byte 0
-    push byte 0x17
-    jmp isrCommonCode
-
-isr18:
-    cli
-    push byte 0
-    push byte 0x18
-    jmp isrCommonCode
-
-isr19:
-    cli
-    push byte 0
-    push byte 0x19
-    jmp isrCommonCode
-
-isr1A:
-    cli
-    push byte 0
-    push byte 0x1A
-    jmp isrCommonCode
-
-isr1B:
-    cli
-    push byte 0
-    push byte 0x1B
-    jmp isrCommonCode
-
-isr1C:
-    cli
-    push byte 0
-    push byte 0x1C
-    jmp isrCommonCode
-
-isr1D:
-    cli
-    push byte 0
-    push byte 0x1D
-    jmp isrCommonCode
-
-isr1E:
-    cli
-    push byte 0
-    push byte 0x1E
-    jmp isrCommonCode
-
-isr1F:
-    cli
-    push byte 0
-    push byte 0x1F
-    jmp isrCommonCode
-
-irq00:
+%macro IRQ 2
+global irq%1
+irq%1:
     cli
     push byte 0x00
-    push byte 0x00
+    push byte 0x%2
     jmp irqCommonCode
+%endmacro
 
-irq01:
-    cli
-    push byte 0x00
-    push byte 0x01
-    jmp irqCommonCode
+ISR_NOERRCODE 0
+ISR_NOERRCODE 1
+ISR_NOERRCODE 2
+ISR_NOERRCODE 3
+ISR_NOERRCODE 4
+ISR_NOERRCODE 5
+ISR_NOERRCODE 6
+ISR_NOERRCODE 7
+ISR_ERRCODE 8
+ISR_NOERRCODE 9
+ISR_ERRCODE 10
+ISR_ERRCODE 11
+ISR_ERRCODE 12
+ISR_ERRCODE 13
+ISR_ERRCODE 14
+ISR_NOERRCODE 15
+ISR_NOERRCODE 16
+ISR_ERRCODE 17
+ISR_NOERRCODE 18
+ISR_NOERRCODE 19
+ISR_NOERRCODE 20
+ISR_ERRCODE 21
+ISR_NOERRCODE 22
+ISR_NOERRCODE 23
+ISR_NOERRCODE 24
+ISR_NOERRCODE 25
+ISR_NOERRCODE 26
+ISR_NOERRCODE 27
+ISR_NOERRCODE 28
+ISR_NOERRCODE 29
+ISR_NOERRCODE 30
+ISR_NOERRCODE 31
 
-irq02:
-    cli
-    push byte 0x00
-    push byte 0x02
-    jmp irqCommonCode
-
-irq03:
-    cli
-    push byte 0x00
-    push byte 0x03
-    jmp irqCommonCode
-
-irq04:
-    cli
-    push byte 0x00
-    push byte 0x04
-    jmp irqCommonCode
-
-irq05:
-    cli
-    push byte 0x00
-    push byte 0x05
-    jmp irqCommonCode
-
-irq06:
-    cli
-    push byte 0x00
-    push byte 0x06
-    jmp irqCommonCode
-
-irq07:
-    cli
-    push byte 0x00
-    push byte 0x07
-    jmp irqCommonCode
-
-irq08:
-    cli
-    push byte 0x00
-    push byte 0x08
-    jmp irqCommonCode
-
-irq09:
-    cli
-    push byte 0x00
-    push byte 0x09
-    jmp irqCommonCode
-
-irq0A:
-    cli
-    push byte 0x00
-    push byte 0x0A
-    jmp irqCommonCode
-
-irq0B:
-    cli
-    push byte 0x00
-    push byte 0x0B
-    jmp irqCommonCode
-
-irq0C:
-    cli
-    push byte 0x00
-    push byte 0x0C
-    jmp irqCommonCode
-
-irq0D:
-    cli
-    push byte 0x00
-    push byte 0x0D
-    jmp irqCommonCode
-
-irq0E:
-    cli
-    push byte 0x00
-    push byte 0x0E
-    jmp irqCommonCode
-
-irq0F:
-    cli
-    push byte 0x00
-    push byte 0x0F
-    jmp irqCommonCode
+IRQ 00, 32
+IRQ 01, 33
+IRQ 02, 34
+IRQ 03, 35
+IRQ 04, 36
+IRQ 05, 37
+IRQ 06, 38
+IRQ 07, 39
+IRQ 08, 40
+IRQ 09, 41
+IRQ 0A, 42
+IRQ 0B, 43
+IRQ 0C, 44
+IRQ 0D, 45
+IRQ 0E, 46
+IRQ 0F, 47
