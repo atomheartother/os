@@ -2,7 +2,7 @@
 #include "isr.h"
 #include "timer.h"
 
-int main() {
+int kernel_main() {
     clearScreen();
     isrInstall();
     __asm__ __volatile__("sti");
