@@ -92,9 +92,9 @@ extern void irq0F();
 
 typedef struct {
     u32 ds;
-    u32 edi, esi, ebp, esp, ebx, edx, ecx, eax;
+    u32 edi, esi, ebp, uselessesp, ebx, edx, ecx, eax;
     u32 intNumber, errCode;
-    u32 eip, cs, eflags, useresp, ss;
+    u32 eip, cs, eflags, esp, ss;
 }   interruptRegisters;
 
 void isrInstall();
