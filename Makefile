@@ -75,6 +75,8 @@ boot: $(IMAGE)
 	$(QEMU) -drive format=raw,file=$(IMAGE)
 
 debug: CFLAGS += -g -DDEBUG
+debug: BOOT_ASMFLAGS += -g
+debug: CPU_ASMFLAGS += -g
 debug: clean $(IMAGE) $(KERNEL_SYMBOLS)
 	$(QEMU) -drive format=raw,file=$(IMAGE) -s -S &
 	$(GDB) -ex "set architecture i386:x86-64" -ex "target remote localhost:1234" -ex "symbol-file $(KERNEL_SYMBOLS)"
