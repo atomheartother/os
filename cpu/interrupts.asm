@@ -21,7 +21,6 @@ isrCommonCode:
     mov gs, ax
     popa
     add esp, 0x08 ; Cleans up the stuff pushed by the isrXX functions
-    sti ; Re-enable interrupts
     iret
 
 irqCommonCode:
@@ -43,13 +42,11 @@ irqCommonCode:
     mov gs, ax
     popa
     add esp, 0x08 ; Cleans up the stuff pushed by the isrXX functions
-    sti ; Re-enable interrupts
     iret
 
 %macro ISR_NOERRCODE 1
 global isr%1
 isr%1:
-    cli
     push byte 0
     push byte %1
     jmp isrCommonCode
@@ -58,7 +55,6 @@ isr%1:
 %macro ISR_ERRCODE 1
 global isr%1
 isr%1:
-    cli
     push byte %1
     jmp isrCommonCode
 %endmacro
@@ -66,7 +62,6 @@ isr%1:
 %macro IRQ 2
 global irq%1
 irq%1:
-    cli
     push byte 0x00
     push byte %2
     jmp irqCommonCode
