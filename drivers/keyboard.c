@@ -17,7 +17,7 @@ const char sc_ascii[SC_MAX + 1] = { '?', '?', '1', '2', '3', '4', '5', '6',
 
 
 static void keyboardCallback() {
-    u8 scancode = inb(0x60);
+    unsigned char scancode = inb(0x60);
     if (scancode > SC_MAX) return;
     if (scancode == ENTER) {
         newline();

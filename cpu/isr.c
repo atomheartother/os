@@ -1,4 +1,4 @@
-#include "types.h"
+#include <stdint.h>
 #include "isr.h"
 #include "idt.h"
 #include "screen.h"
@@ -12,38 +12,38 @@ isrCallback isrCallbacks[256];
 void isrInstall()
 {
     // Register the 0-31 reserved Intel interrupts
-    setIdtGate(0x00, (u32)isr0);
-    setIdtGate(0x01, (u32)isr1);
-    setIdtGate(0x02, (u32)isr2);
-    setIdtGate(0x03, (u32)isr3);
-    setIdtGate(0x04, (u32)isr4);
-    setIdtGate(0x05, (u32)isr5);
-    setIdtGate(0x06, (u32)isr6);
-    setIdtGate(0x07, (u32)isr7);
-    setIdtGate(0x08, (u32)isr8);
-    setIdtGate(0x09, (u32)isr9);
-    setIdtGate(0x0A, (u32)isr10);
-    setIdtGate(0x0B, (u32)isr11);
-    setIdtGate(0x0C, (u32)isr12);
-    setIdtGate(0x0D, (u32)isr13);
-    setIdtGate(0x0E, (u32)isr14);
-    setIdtGate(0x0F, (u32)isr15);
-    setIdtGate(0x10, (u32)isr16);
-    setIdtGate(0x11, (u32)isr17);
-    setIdtGate(0x12, (u32)isr18);
-    setIdtGate(0x13, (u32)isr19);
-    setIdtGate(0x14, (u32)isr20);
-    setIdtGate(0x15, (u32)isr21);
-    setIdtGate(0x16, (u32)isr22);
-    setIdtGate(0x17, (u32)isr23);
-    setIdtGate(0x18, (u32)isr24);
-    setIdtGate(0x19, (u32)isr25);
-    setIdtGate(0x1A, (u32)isr26);
-    setIdtGate(0x1B, (u32)isr27);
-    setIdtGate(0x1C, (u32)isr28);
-    setIdtGate(0x1D, (u32)isr29);
-    setIdtGate(0x1E, (u32)isr30);
-    setIdtGate(0x1F, (u32)isr31);
+    setIdtGate(0x00, (uint32_t)isr0);
+    setIdtGate(0x01, (uint32_t)isr1);
+    setIdtGate(0x02, (uint32_t)isr2);
+    setIdtGate(0x03, (uint32_t)isr3);
+    setIdtGate(0x04, (uint32_t)isr4);
+    setIdtGate(0x05, (uint32_t)isr5);
+    setIdtGate(0x06, (uint32_t)isr6);
+    setIdtGate(0x07, (uint32_t)isr7);
+    setIdtGate(0x08, (uint32_t)isr8);
+    setIdtGate(0x09, (uint32_t)isr9);
+    setIdtGate(0x0A, (uint32_t)isr10);
+    setIdtGate(0x0B, (uint32_t)isr11);
+    setIdtGate(0x0C, (uint32_t)isr12);
+    setIdtGate(0x0D, (uint32_t)isr13);
+    setIdtGate(0x0E, (uint32_t)isr14);
+    setIdtGate(0x0F, (uint32_t)isr15);
+    setIdtGate(0x10, (uint32_t)isr16);
+    setIdtGate(0x11, (uint32_t)isr17);
+    setIdtGate(0x12, (uint32_t)isr18);
+    setIdtGate(0x13, (uint32_t)isr19);
+    setIdtGate(0x14, (uint32_t)isr20);
+    setIdtGate(0x15, (uint32_t)isr21);
+    setIdtGate(0x16, (uint32_t)isr22);
+    setIdtGate(0x17, (uint32_t)isr23);
+    setIdtGate(0x18, (uint32_t)isr24);
+    setIdtGate(0x19, (uint32_t)isr25);
+    setIdtGate(0x1A, (uint32_t)isr26);
+    setIdtGate(0x1B, (uint32_t)isr27);
+    setIdtGate(0x1C, (uint32_t)isr28);
+    setIdtGate(0x1D, (uint32_t)isr29);
+    setIdtGate(0x1E, (uint32_t)isr30);
+    setIdtGate(0x1F, (uint32_t)isr31);
 
     // Notify the PIC we want to remap the IRQs to 32-47 (0x20 - 0x2F)
     outb(PIC1_COMMAND, 0x11);
@@ -57,22 +57,22 @@ void isrInstall()
     outb(PIC1_DATA, 0x0);
     outb(PIC2_DATA, 0x0);
 
-    setIdtGate(IRQ0, (u32)irq00);
-    setIdtGate(IRQ1, (u32)irq01);
-    setIdtGate(IRQ2, (u32)irq02);
-    setIdtGate(IRQ3, (u32)irq03);
-    setIdtGate(IRQ4, (u32)irq04);
-    setIdtGate(IRQ5, (u32)irq05);
-    setIdtGate(IRQ6, (u32)irq06);
-    setIdtGate(IRQ7, (u32)irq07);
-    setIdtGate(IRQ8, (u32)irq08);
-    setIdtGate(IRQ9, (u32)irq09);
-    setIdtGate(IRQ10, (u32)irq0A);
-    setIdtGate(IRQ11, (u32)irq0B);
-    setIdtGate(IRQ12, (u32)irq0C);
-    setIdtGate(IRQ13, (u32)irq0D);
-    setIdtGate(IRQ14, (u32)irq0E);
-    setIdtGate(IRQ15, (u32)irq0F);
+    setIdtGate(IRQ0, (uint32_t)irq00);
+    setIdtGate(IRQ1, (uint32_t)irq01);
+    setIdtGate(IRQ2, (uint32_t)irq02);
+    setIdtGate(IRQ3, (uint32_t)irq03);
+    setIdtGate(IRQ4, (uint32_t)irq04);
+    setIdtGate(IRQ5, (uint32_t)irq05);
+    setIdtGate(IRQ6, (uint32_t)irq06);
+    setIdtGate(IRQ7, (uint32_t)irq07);
+    setIdtGate(IRQ8, (uint32_t)irq08);
+    setIdtGate(IRQ9, (uint32_t)irq09);
+    setIdtGate(IRQ10, (uint32_t)irq0A);
+    setIdtGate(IRQ11, (uint32_t)irq0B);
+    setIdtGate(IRQ12, (uint32_t)irq0C);
+    setIdtGate(IRQ13, (uint32_t)irq0D);
+    setIdtGate(IRQ14, (uint32_t)irq0E);
+    setIdtGate(IRQ15, (uint32_t)irq0F);
     initIdt();
 }
 
@@ -95,7 +95,7 @@ void irqHandler(const interruptRegisters r) {
     }
 }
 
-void registerIsrCallback(u8 n, isrCallback handler) {
+void registerIsrCallback(unsigned char n, isrCallback handler) {
     isrCallbacks[n] = handler;
 }
 

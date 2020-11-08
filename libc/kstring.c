@@ -1,7 +1,7 @@
 #include "kstring.h"
 
-u32 strlen(char s[]) {
-    u32 i = 0;
+uint32_t strlen(char s[]) {
+    uint32_t i = 0;
     while (s[i] != '\0') ++i;
     return i;
 }

@@ -1,7 +1,7 @@
 #ifndef CPU_ISR_H_
 # define CPU_ISR_H_
 
-#include "types.h"
+#include <stdint.h>
 
 extern void isr0();
 extern void isr1();
@@ -91,10 +91,10 @@ extern void irq0F();
 #define PIC2_DATA	(PIC2+1)
 
 typedef struct {
-    u32 ds;
-    u32 edi, esi, ebp, uselessesp, ebx, edx, ecx, eax;
-    u32 intNumber, errCode;
-    u32 eip, cs, eflags, esp, ss;
+    uint32_t ds;
+    uint32_t edi, esi, ebp, uselessesp, ebx, edx, ecx, eax;
+    uint32_t intNumber, errCode;
+    uint32_t eip, cs, eflags, esp, ss;
 }   interruptRegisters;
 
 void isrInstall();
@@ -103,6 +103,6 @@ void isrHandler(const interruptRegisters r);
 void irqInstall();
 
 typedef void (*isrCallback)(const interruptRegisters);
-void registerIsrCallback(u8 n, isrCallback handler);
+void registerIsrCallback(unsigned char n, isrCallback handler);
 
 #endif

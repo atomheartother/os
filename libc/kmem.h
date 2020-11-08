@@ -1,8 +1,8 @@
 #ifndef KMEM_H_
 # define KMEM_H_
 
-#include "types.h"
+#include <stdint.h>
 
-void os_memcpy(i8 *dest, const i8* src, u32 n);
+void os_memcpy(char *dest, const char* src, uint32_t n);
 
 #endif

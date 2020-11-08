@@ -4,7 +4,7 @@
 idtEntry idt[IDT_ENTRIES];
 idtRegister idtReg;
 
-void setIdtGate(u16 n, u32 address) {
+void setIdtGate(uint16_t n, uint32_t address) {
     idt[n].offsetL = address & 0xffff;
     idt[n].selector = GDT_CS_OFFSET;
     idt[n].zero = 0;
@@ -20,7 +20,7 @@ void setIdtGate(u16 n, u32 address) {
 }
 
 void initIdt() {
-    idtReg.base = (u32)&idt;
+    idtReg.base = (uint32_t)&idt;
     idtReg.limit = sizeof(idtEntry) * IDT_ENTRIES - 1; // -1 because sizes start at 1
     __asm__ __volatile__("lidtl (%0)" : : "r" (&idtReg));
 }

@@ -1,10 +1,10 @@
 #ifndef DRIVER_PORTS_H_
 # define DRIVER_PORTS_H_
 
-#include "types.h"
+#include <stdint.h>
 
-u8 inb(const u16 port);
-void outb(const u16 port, const u8 cata);
+unsigned char inb(const uint16_t port);
+void outb(const uint16_t port, const unsigned char cata);
 void io_wait(void);
 
 #endif

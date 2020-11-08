@@ -1,9 +1,9 @@
 #ifndef KSTRING_H_
 # define KSTRING_H_
 
-#include "types.h"
+#include <stdint.h>
 
-u32 strlen(char s[]);
+uint32_t strlen(char s[]);
 void reverse(char s[]);
 void int_to_ascii(int n, char str[]);
 

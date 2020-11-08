@@ -1,12 +1,12 @@
 #include "ports.h"
 
-u8 inb(const u16 port) {
-    u8 result;
+unsigned char inb(const uint16_t port) {
+    unsigned char result;
     __asm__("in %%dx, %%al" : "=a" (result) : "d" (port));
     return result;
 }
 
-void outb(const u16 port, const u8 data) {
+void outb(const uint16_t port, const unsigned char data) {
     __asm__("out %%al, %%dx" : : "a" (data), "d" (port));
 }
 
