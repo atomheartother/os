@@ -11,7 +11,8 @@ QEMU = qemu-system-x86_64
 GDB = gdb
 
 CC = ./cross-tools/bin/i386-elf-gcc 
-CFLAGS := -Wall -Wextra
+CFLAGS := -Wall -Wextra -Werror
+CFLAGS += -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector -nostartfiles -nodefaultlibs
 CFLAGS += -I$(KERNEL_DIR)
 CFLAGS += -I$(DRIVERS_DIR)
 CFLAGS += -I$(CPU_DIR)

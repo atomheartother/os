@@ -5,6 +5,7 @@
 #include "screen.h"
 
 static void keyboardCallback(interruptRegisters r) {
+    (void)r;
     u8 scancode = inb(0x60);
     char letter[2];
     int_to_ascii(scancode, letter);

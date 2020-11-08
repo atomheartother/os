@@ -6,4 +6,5 @@ int kernel_main() {
     isrInstall();
     __asm__ __volatile__("sti");
     irqInstall();
+    return 0;
 }
