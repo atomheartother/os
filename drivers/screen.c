@@ -1,6 +1,6 @@
 #include "screen.h"
 #include "ports.h"
-#include "utils.h"
+#include "kmem.h"
 
 /* 
  * Private function prototypes

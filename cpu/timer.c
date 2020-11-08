@@ -1,18 +1,11 @@
 #include "timer.h"
 #include "isr.h"
-#include "screen.h"
-#include "utils.h"
 #include "ports.h"
 
 u32 tick = 0;
 
 static void timerCallback() {
     tick++;
-    printMessage("Tick: ");
-    char str[256];
-    int_to_ascii(tick, str);
-    printMessage(str);
-    newline();
 }
 
 void init_timer(u32 freq) {

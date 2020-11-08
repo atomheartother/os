@@ -3,7 +3,9 @@
 #include "idt.h"
 #include "screen.h"
 #include "ports.h"
-#include "utils.h"
+#include "kstring.h"
+#include "timer.h"
+#include "keyboard.h"
 
 isrCallback isrCallbacks[256];
 
@@ -95,4 +97,9 @@ void irqHandler(const interruptRegisters r) {
 
 void registerIsrCallback(u8 n, isrCallback handler) {
     isrCallbacks[n] = handler;
+}
+
+void irqInstall() {
+    init_timer(50);
+    init_keyboard();
 }

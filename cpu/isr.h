@@ -100,6 +100,8 @@ typedef struct {
 void isrInstall();
 void isrHandler(const interruptRegisters r);
 
+void irqInstall();
+
 typedef void (*isrCallback)(const interruptRegisters);
 void registerIsrCallback(u8 n, isrCallback handler);
 
