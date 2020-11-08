@@ -100,6 +100,7 @@ void registerIsrCallback(u8 n, isrCallback handler) {
 }
 
 void irqInstall() {
+    __asm__ __volatile__("sti");
     init_timer(50);
     init_keyboard();
 }
