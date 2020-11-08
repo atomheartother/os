@@ -4,14 +4,28 @@
 #include "kstring.h"
 #include "screen.h"
 
-static void keyboardCallback(interruptRegisters r) {
-    (void)r;
+#define SC_MAX 57
+
+#define BACKSPACE 0x0E
+#define ENTER 0x1C
+
+const char sc_ascii[SC_MAX + 1] = { '?', '?', '1', '2', '3', '4', '5', '6',     
+    '7', '8', '9', '0', '-', '=', '?', '?', 'Q', 'W', 'E', 'R', 'T', 'Y', 
+    'U', 'I', 'O', 'P', '[', ']', '?', '?', 'A', 'S', 'D', 'F', 'G', 
+    'H', 'J', 'K', 'L', ';', '\'', '`', '?', '\\', 'Z', 'X', 'C', 'V', 
+    'B', 'N', 'M', ',', '.', '/', '?', '?', '?', ' '};
+
+
+static void keyboardCallback() {
     u8 scancode = inb(0x60);
-    char letter[4];
-    int_to_ascii(scancode, letter);
-    printMessage("Keyboard scancode: ");
-    printMessage(letter);
-    newline();
+    if (scancode > SC_MAX) return;
+    if (scancode == ENTER) {
+        newline();
+    } else if (scancode == BACKSPACE) {
+        backspace();
+    } else {
+        printChar(sc_ascii[scancode]);
+    }
 }
 
 void init_keyboard() {

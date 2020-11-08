@@ -10,9 +10,11 @@
 
 # define WHITE_ON_BLACK 0x0f
 
+void printChar(const u8 c);
 void printMessage(const i8* message);
 void printMessageAt(const i8* message, u32 row, u32 col);
-void newline();
+void newline(void);
 void clearScreen(void);
+void backspace(void);
 
 #endif
