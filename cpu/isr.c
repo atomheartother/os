@@ -82,9 +82,9 @@ void isrHandler(const interruptRegisters r) {
 }
 
 void irqHandler(const interruptRegisters r) {
-    if (r.intNumber >= 0x08) outb(PIC2_COMMAND, 0x20);
+    if (r.intNumber >= IRQ8) outb(PIC2_COMMAND, 0x20);
     outb(PIC1_COMMAND, 0x20);
-    if (r.intNumber >= IRQ_COUNT) {
+    if (r.intNumber < IRQ_START ||  r.intNumber >= IRQ_START + IRQ_COUNT) {
         printMessage("Got out of bounds IRQ handler. This should literally never happen.");
         return;
     }

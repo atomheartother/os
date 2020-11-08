@@ -35,7 +35,6 @@ irqCommonCode:
     mov gs, ax
 
     call irqHandler
-    pop ebx
 
     pop eax
     mov ds, ax ; Set segments to the original value
@@ -69,7 +68,7 @@ global irq%1
 irq%1:
     cli
     push byte 0x00
-    push byte 0x%2
+    push byte %2
     jmp irqCommonCode
 %endmacro
 
