@@ -7,7 +7,7 @@
 static void keyboardCallback(interruptRegisters r) {
     (void)r;
     u8 scancode = inb(0x60);
-    char letter[2];
+    char letter[4];
     int_to_ascii(scancode, letter);
     printMessage("Keyboard scancode: ");
     printMessage(letter);
