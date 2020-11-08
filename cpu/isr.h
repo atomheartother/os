@@ -98,11 +98,11 @@ typedef struct {
 }   interruptRegisters;
 
 void isrInstall();
-void isrHandler(const interruptRegisters r);
-
+void isrHandler(interruptRegisters* r);
+void irqHandler(interruptRegisters* r);
 void irqInstall();
 
-typedef void (*isrCallback)(const interruptRegisters);
+typedef void (*isrCallback)(interruptRegisters*);
 void registerIsrCallback(unsigned char n, isrCallback handler);
 
 #endif

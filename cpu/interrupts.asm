@@ -12,9 +12,12 @@ isrCommonCode:
     mov fs, ax
     mov gs, ax
 
+	push esp ; Push a pointer to the interruptRegisters struct
+    cld ; C code following the sysV ABI requires DF to be clear on function entry
     call isrHandler
 
-    pop eax
+    pop eax ; Remove the pointer
+    pop eax ; Recover eax
     mov ds, ax ; Set segments to the original value
     mov es, ax
     mov fs, ax
@@ -33,8 +36,11 @@ irqCommonCode:
     mov fs, ax
     mov gs, ax
 
+	push esp ; Push a pointer to the interruptRegisters struct
+    cld ; C code following the sysV ABI requires DF to be clear on function entry
     call irqHandler
 
+    pop eax ; Remove the pointer
     pop eax
     mov ds, ax ; Set segments to the original value
     mov es, ax

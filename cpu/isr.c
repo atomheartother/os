@@ -76,22 +76,22 @@ void isrInstall()
     initIdt();
 }
 
-void isrHandler(const interruptRegisters r) {
+void isrHandler(interruptRegisters* r) {
     printMessage("Received interrupt: ");
     char code[4];
-    int_to_ascii(r.intNumber, code);
+    int_to_ascii(r->intNumber, code);
     printMessage(code);
 }
 
-void irqHandler(const interruptRegisters r) {
-    if (r.intNumber >= IRQ8) outb(PIC2_COMMAND, 0x20);
+void irqHandler(interruptRegisters* r) {
+    if (r->intNumber >= IRQ8) outb(PIC2_COMMAND, 0x20);
     outb(PIC1_COMMAND, 0x20);
-    if (r.intNumber < IRQ_START ||  r.intNumber >= IRQ_START + IRQ_COUNT) {
-        printMessage("Got out of bounds IRQ handler. This should literally never happen.");
+    if (r->intNumber < IRQ_START ||  r->intNumber >= IRQ_START + IRQ_COUNT) {
+        printMessage("Got out of bounds IRQ handler-> This should literally never happen.");
         return;
     }
-    if (isrCallbacks[r.intNumber] != 0) {
-        isrCallbacks[r.intNumber](r);
+    if (isrCallbacks[r->intNumber] != 0) {
+        isrCallbacks[r->intNumber](r);
     }
 }
 
