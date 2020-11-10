@@ -87,7 +87,7 @@ void irqHandler(interruptRegisters* r) {
     if (r->intNumber >= IRQ8) outb(PIC2_COMMAND, 0x20);
     outb(PIC1_COMMAND, 0x20);
     if (r->intNumber < IRQ_START ||  r->intNumber >= IRQ_START + IRQ_COUNT) {
-        printMessage("Got out of bounds IRQ handler-> This should literally never happen.");
+        printMessage("Got out of bounds IRQ handler. This should literally never happen.");
         return;
     }
     if (isrCallbacks[r->intNumber] != 0) {
