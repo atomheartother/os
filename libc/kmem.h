@@ -1,8 +1,13 @@
 #ifndef KMEM_H_
 # define KMEM_H_
 
-#include <stdint.h>
+#include <stddef.h>
 
-void os_memcpy(char *dest, const char* src, uint32_t n);
+void os_memcpy(void *dest, const void* src, size_t n);
+
+void* kmalloc_ap(size_t size, size_t* phys);
+void* kmalloc_p(size_t size, size_t* phys);
+void* kmalloc_a(size_t size);
+void* kmalloc(size_t size);
 
 #endif

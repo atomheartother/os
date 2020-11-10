@@ -1,6 +1,7 @@
 #ifndef CPU_IDT_H_
 # define CPU_IDT_H_
 
+#include <stddef.h>
 #include <stdint.h>
 
 #define GDT_CS_OFFSET 0x08
@@ -24,7 +25,7 @@ typedef struct {
 // extern idtEntry idt[IDT_ENTRIES];
 // extern idtRegister idtReg;
 
-void setIdtGate(uint16_t n, uint32_t address);
+void setIdtGate(uint16_t n, size_t address);
 void initIdt();
 
 #endif

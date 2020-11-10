@@ -1,3 +1,4 @@
+#include <stddef.h>
 #include <stdint.h>
 #include "isr.h"
 #include "idt.h"
@@ -12,38 +13,38 @@ isrCallback isrCallbacks[256];
 void isrInstall()
 {
     // Register the 0-31 reserved Intel interrupts
-    setIdtGate(0x00, (uint32_t)isr0);
-    setIdtGate(0x01, (uint32_t)isr1);
-    setIdtGate(0x02, (uint32_t)isr2);
-    setIdtGate(0x03, (uint32_t)isr3);
-    setIdtGate(0x04, (uint32_t)isr4);
-    setIdtGate(0x05, (uint32_t)isr5);
-    setIdtGate(0x06, (uint32_t)isr6);
-    setIdtGate(0x07, (uint32_t)isr7);
-    setIdtGate(0x08, (uint32_t)isr8);
-    setIdtGate(0x09, (uint32_t)isr9);
-    setIdtGate(0x0A, (uint32_t)isr10);
-    setIdtGate(0x0B, (uint32_t)isr11);
-    setIdtGate(0x0C, (uint32_t)isr12);
-    setIdtGate(0x0D, (uint32_t)isr13);
-    setIdtGate(0x0E, (uint32_t)isr14);
-    setIdtGate(0x0F, (uint32_t)isr15);
-    setIdtGate(0x10, (uint32_t)isr16);
-    setIdtGate(0x11, (uint32_t)isr17);
-    setIdtGate(0x12, (uint32_t)isr18);
-    setIdtGate(0x13, (uint32_t)isr19);
-    setIdtGate(0x14, (uint32_t)isr20);
-    setIdtGate(0x15, (uint32_t)isr21);
-    setIdtGate(0x16, (uint32_t)isr22);
-    setIdtGate(0x17, (uint32_t)isr23);
-    setIdtGate(0x18, (uint32_t)isr24);
-    setIdtGate(0x19, (uint32_t)isr25);
-    setIdtGate(0x1A, (uint32_t)isr26);
-    setIdtGate(0x1B, (uint32_t)isr27);
-    setIdtGate(0x1C, (uint32_t)isr28);
-    setIdtGate(0x1D, (uint32_t)isr29);
-    setIdtGate(0x1E, (uint32_t)isr30);
-    setIdtGate(0x1F, (uint32_t)isr31);
+    setIdtGate(0x00, (size_t)isr0);
+    setIdtGate(0x01, (size_t)isr1);
+    setIdtGate(0x02, (size_t)isr2);
+    setIdtGate(0x03, (size_t)isr3);
+    setIdtGate(0x04, (size_t)isr4);
+    setIdtGate(0x05, (size_t)isr5);
+    setIdtGate(0x06, (size_t)isr6);
+    setIdtGate(0x07, (size_t)isr7);
+    setIdtGate(0x08, (size_t)isr8);
+    setIdtGate(0x09, (size_t)isr9);
+    setIdtGate(0x0A, (size_t)isr10);
+    setIdtGate(0x0B, (size_t)isr11);
+    setIdtGate(0x0C, (size_t)isr12);
+    setIdtGate(0x0D, (size_t)isr13);
+    setIdtGate(0x0E, (size_t)isr14);
+    setIdtGate(0x0F, (size_t)isr15);
+    setIdtGate(0x10, (size_t)isr16);
+    setIdtGate(0x11, (size_t)isr17);
+    setIdtGate(0x12, (size_t)isr18);
+    setIdtGate(0x13, (size_t)isr19);
+    setIdtGate(0x14, (size_t)isr20);
+    setIdtGate(0x15, (size_t)isr21);
+    setIdtGate(0x16, (size_t)isr22);
+    setIdtGate(0x17, (size_t)isr23);
+    setIdtGate(0x18, (size_t)isr24);
+    setIdtGate(0x19, (size_t)isr25);
+    setIdtGate(0x1A, (size_t)isr26);
+    setIdtGate(0x1B, (size_t)isr27);
+    setIdtGate(0x1C, (size_t)isr28);
+    setIdtGate(0x1D, (size_t)isr29);
+    setIdtGate(0x1E, (size_t)isr30);
+    setIdtGate(0x1F, (size_t)isr31);
 
     // Notify the PIC we want to remap the IRQs to 32-47 (0x20 - 0x2F)
     outb(PIC1_COMMAND, 0x11);
@@ -57,22 +58,22 @@ void isrInstall()
     outb(PIC1_DATA, 0x0);
     outb(PIC2_DATA, 0x0);
 
-    setIdtGate(IRQ0, (uint32_t)irq00);
-    setIdtGate(IRQ1, (uint32_t)irq01);
-    setIdtGate(IRQ2, (uint32_t)irq02);
-    setIdtGate(IRQ3, (uint32_t)irq03);
-    setIdtGate(IRQ4, (uint32_t)irq04);
-    setIdtGate(IRQ5, (uint32_t)irq05);
-    setIdtGate(IRQ6, (uint32_t)irq06);
-    setIdtGate(IRQ7, (uint32_t)irq07);
-    setIdtGate(IRQ8, (uint32_t)irq08);
-    setIdtGate(IRQ9, (uint32_t)irq09);
-    setIdtGate(IRQ10, (uint32_t)irq0A);
-    setIdtGate(IRQ11, (uint32_t)irq0B);
-    setIdtGate(IRQ12, (uint32_t)irq0C);
-    setIdtGate(IRQ13, (uint32_t)irq0D);
-    setIdtGate(IRQ14, (uint32_t)irq0E);
-    setIdtGate(IRQ15, (uint32_t)irq0F);
+    setIdtGate(IRQ0, (size_t)irq00);
+    setIdtGate(IRQ1, (size_t)irq01);
+    setIdtGate(IRQ2, (size_t)irq02);
+    setIdtGate(IRQ3, (size_t)irq03);
+    setIdtGate(IRQ4, (size_t)irq04);
+    setIdtGate(IRQ5, (size_t)irq05);
+    setIdtGate(IRQ6, (size_t)irq06);
+    setIdtGate(IRQ7, (size_t)irq07);
+    setIdtGate(IRQ8, (size_t)irq08);
+    setIdtGate(IRQ9, (size_t)irq09);
+    setIdtGate(IRQ10, (size_t)irq0A);
+    setIdtGate(IRQ11, (size_t)irq0B);
+    setIdtGate(IRQ12, (size_t)irq0C);
+    setIdtGate(IRQ13, (size_t)irq0D);
+    setIdtGate(IRQ14, (size_t)irq0E);
+    setIdtGate(IRQ15, (size_t)irq0F);
     initIdt();
 }
 
