@@ -3,7 +3,7 @@
 
 #include <stddef.h>
 
-void os_memcpy(void *dest, const void* src, size_t n);
+void memcpy(void *dest, const void* src, size_t n);
 
 void* kmalloc_ap(size_t size, size_t* phys);
 void* kmalloc_p(size_t size, size_t* phys);

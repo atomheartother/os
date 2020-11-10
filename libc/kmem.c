@@ -2,7 +2,7 @@
 
 size_t placementAddress = 0;
 
-void os_memcpy(void *dest, const void* src, size_t n) {
+void memcpy(void *dest, const void* src, size_t n) {
     while (n--) {
         *((char*)dest++) = *((char*)src++);
     }
