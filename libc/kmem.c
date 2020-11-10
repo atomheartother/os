@@ -9,7 +9,7 @@ void memcpy(void *dest, const void* src, size_t n) {
 }
 
 static void* kmalloc_internal(size_t size, int align, size_t* phys) {
-    if (align) {
+    if (align && (placementAddress & 0x00000FFF)) {
         placementAddress &= 0xFFFFF000;
         placementAddress += 0x1000;
     }
