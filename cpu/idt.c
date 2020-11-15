@@ -23,5 +23,5 @@ void setIdtGate(uint16_t n, size_t address) {
 void initIdt() {
     idtReg.base = (size_t)&idt;
     idtReg.limit = sizeof(idtEntry) * IDT_ENTRIES - 1; // -1 because sizes start at 1
-    __asm__ __volatile__("lidtl (%0)" : : "r" (&idtReg));
+    asm volatile("lidtl (%0)" : : "r" (&idtReg));
 }

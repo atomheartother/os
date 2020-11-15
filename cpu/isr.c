@@ -101,7 +101,7 @@ void registerIsrCallback(unsigned char n, isrCallback handler) {
 }
 
 void irqInstall() {
-    __asm__ __volatile__("sti");
+    asm volatile("sti");
     init_timer(50);
     init_keyboard();
 }
