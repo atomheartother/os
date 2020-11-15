@@ -43,4 +43,7 @@ typedef struct {
     unsigned int address     : 20; // The page table's physical address, 4kB aligned
 }   pageDirectoryEntry;
 
+void installPaging(void);
+void initPaging(pageDirectoryEntry *pageDirectory);
+
 #endif
