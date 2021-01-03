@@ -67,13 +67,13 @@ $(ENTRY_BIN): $(ENTRY_SRC)
 $(KERNEL_OBJECTS): $(BUILD_DIR)/$(KERNEL_DIR)/%.o : $(KERNEL_DIR)/%.c
 	$(CC) -ffreestanding $(CFLAGS) -c $< -o $@
 
-$(DRIVERS_OBJECTS): $(BUILD_DIR)/$(DRIVERS_DIR)%.o : $(DRIVERS_DIR)/%.c
+$(DRIVERS_OBJECTS): $(BUILD_DIR)/$(DRIVERS_DIR)/%.o : $(DRIVERS_DIR)/%.c
 	$(CC) -ffreestanding $(CFLAGS) -c $< -o $@
 
-$(CPU_OBJECTS): $(BUILD_DIR)/$(CPU_DIR)%.o : $(CPU_DIR)/%.c
+$(CPU_OBJECTS): $(BUILD_DIR)/$(CPU_DIR)/%.o : $(CPU_DIR)/%.c
 	$(CC) -ffreestanding $(CFLAGS) -c $< -o $@
 
-$(LIBC_OBJECTS): $(BUILD_DIR)/$(LIBC_DIR)%.o : $(LIBC_DIR)/%.c
+$(LIBC_OBJECTS): $(BUILD_DIR)/$(LIBC_DIR)/%.o : $(LIBC_DIR)/%.c
 	$(CC) -ffreestanding $(CFLAGS) -c $< -o $@
 
 $(CPU_ASM_OBJECTS): $(BUILD_DIR)/$(CPU_DIR)%.asm.o : $(CPU_DIR)/%.asm
