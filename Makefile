@@ -18,6 +18,7 @@ CFLAGS += -I$(KERNEL_DIR)
 CFLAGS += -I$(DRIVERS_DIR)
 CFLAGS += -I$(CPU_DIR)
 CFLAGS += -I$(LIBC_DIR)
+CFLAGS += -ffreestanding
 
 LD = ./cross-tools/bin/i386-elf-ld
 LD_SOURCES=./cross-tools/binutils.tar.gz
@@ -65,16 +66,16 @@ $(ENTRY_BIN): $(ENTRY_SRC)
 	$(ASM) $< -f elf -o $@
 
 $(KERNEL_OBJECTS): $(BUILD_DIR)/$(KERNEL_DIR)/%.o : $(KERNEL_DIR)/%.c
-	$(CC) -ffreestanding $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 $(DRIVERS_OBJECTS): $(BUILD_DIR)/$(DRIVERS_DIR)/%.o : $(DRIVERS_DIR)/%.c
-	$(CC) -ffreestanding $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 $(CPU_OBJECTS): $(BUILD_DIR)/$(CPU_DIR)/%.o : $(CPU_DIR)/%.c
-	$(CC) -ffreestanding $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 $(LIBC_OBJECTS): $(BUILD_DIR)/$(LIBC_DIR)/%.o : $(LIBC_DIR)/%.c
-	$(CC) -ffreestanding $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 $(CPU_ASM_OBJECTS): $(BUILD_DIR)/$(CPU_DIR)%.asm.o : $(CPU_DIR)/%.asm
 	$(ASM) $(CPU_ASMFLAGS) $< -o $@
