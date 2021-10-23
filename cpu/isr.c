@@ -82,6 +82,9 @@ void isrHandler(interruptRegisters* r) {
     char code[4];
     int_to_ascii(r->intNumber, code);
     printMessage(code);
+    printMessage(", error code: ");
+    int_to_ascii(r->errCode, code);
+    printMessage(code);
     newline();
 }
 
