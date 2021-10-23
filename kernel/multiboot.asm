@@ -32,7 +32,7 @@ _start:
 
     cli ; Disable interrupts
     lgdt [gdt_descriptor] ; Load gdt
-    jmp 0x08:.reloadSegments
+    jmp CODE_SEG:.reloadSegments
 .reloadSegments:
     mov ax, DATA_SEG ; Update segment registers to be in data segment
     mov ds, ax
