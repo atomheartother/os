@@ -48,6 +48,8 @@ BEGIN_PM:
     mov ebx, MSG_PROT_MODE
     call print_vga
     call KERNEL_OFFSET ; Here goes nothing
+    cli ; We should never reach this code
+    hlt
     jmp $
 
 MSG_REAL_MODE db "Started in 16-bit real mode", 0
