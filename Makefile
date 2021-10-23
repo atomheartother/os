@@ -37,8 +37,7 @@ CPU_ASMFLAGS = -felf32 -i./$(CPU_DIR)/
 MULTIBOOT_ASMFLAGS = -felf32 -i./$(KERNEL_DIR)/
 MULTIBOOT_ASM = $(KERNEL_DIR)/multiboot.asm
 MULTIBOOT_SRC = $(MULTIBOOT_ASM) \
-				$(KERNEL_DIR)/32b_gdt.asm \
-				$(KERNEL_DIR)/32b_print.asm
+				$(KERNEL_DIR)/32b_gdt.asm
 
 MULTIBOOT_OBJ = $(BUILD_DIR)/multiboot.o
 

@@ -27,12 +27,13 @@ global _start:function (_start.end - _start)
 _start:
 	; The bootloader has loaded us into 32-bit protected mode on a x86
 	; machine. Interrupts are disabled. Paging is disabled.
-    mov ebx, MSG_KERNEL
-    call print_vga
     ; Set up the stack so C can function
     mov esp, stack_bottom
 
+    cli ; Disable interrupts
     lgdt [gdt_descriptor] ; Load gdt
+    jmp 0x08:.reloadSegments
+.reloadSegments:
     mov ax, DATA_SEG ; Update segment registers to be in data segment
     mov ds, ax
     mov ss, ax
@@ -40,8 +41,12 @@ _start:
     mov fs, ax
     mov gs, ax
 
+    ; We should be good to go.
+    ; Re-enable interrupts
+    sti
+
     extern kernel_main
-    call kernel_main
+    call kernel_main ; Here goes nothing!
 ; Use this to infinite-loop without using up CPU
 .hang: 
   cli ; Clear all interrupts
@@ -50,7 +55,3 @@ _start:
 .end:
 
 %include "32b_gdt.asm"
-%include "32b_print.asm"
-
-MSG_KERNEL db "Reached kenel", 0
-MSG_GDT db "Loaded GDT, data segments initialized", 0
