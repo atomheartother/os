@@ -20,7 +20,6 @@ CFLAGS += -ffreestanding
 
 LD = ./cross-tools/bin/i386-elf-ld
 LD_SOURCES=./cross-tools/binutils.tar.gz
-LD_OFFSET = -Ttext 0x1000 # Same offset as in boot.asm
 LD_BINARY = --oformat binary
 
 KERNEL_SOURCES = $(wildcard $(KERNEL_DIR)/*.c)
@@ -65,8 +64,8 @@ $(KERNEL): $(MULTIBOOT_OBJ) $(KERNEL_OBJECTS) $(DRIVERS_OBJECTS) $(CPU_OBJECTS) 
 $(MULTIBOOT_OBJ): $(MULTIBOOT_SRC)
 	$(ASM) $(MULTIBOOT_ASMFLAGS) $(MULTIBOOT_ASM) -o $@
 
-$(KERNEL_SYMBOLS): $(BUILD_DIR) $(MULTIBOOT) $(KERNEL_OBJECTS) $(DRIVERS_OBJECTS) $(CPU_OBJECTS) $(CPU_ASM_OBJECTS) $(LIBC_OBJECTS)
-	$(LD) -o $@ $(LD_OFFSET) $^
+$(KERNEL_SYMBOLS): $(MULTIBOOT) $(KERNEL_OBJECTS) $(DRIVERS_OBJECTS) $(CPU_OBJECTS) $(CPU_ASM_OBJECTS) $(LIBC_OBJECTS)
+	$(LD) -o $@ $^
 
 $(KERNEL_OBJECTS): $(BUILD_DIR)/$(KERNEL_DIR)/%.o : $(KERNEL_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -92,8 +91,8 @@ boot: $(BUILD_DIR) $(KERNEL)
 debug: CFLAGS += -g -DDEBUG
 debug: MULTIBOOT_ASMFLAGS += -g
 debug: CPU_ASMFLAGS += -g
-debug: clean $(IMAGE) $(KERNEL_SYMBOLS)
-	$(QEMU) -drive format=raw,file=$(IMAGE) -s -S &
+debug: clean $(BUILD_DIR) $(ISO) $(KERNEL_SYMBOLS)
+	$(QEMU) -cdrom $(ISO) -s -S &
 	$(GDB) -ex "set architecture i386:x86-64" -ex "target remote localhost:1234" -ex "symbol-file $(KERNEL_SYMBOLS)"
 
 $(GRUBDIR):
