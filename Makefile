@@ -60,11 +60,12 @@ $(ISO): $(BUILD_DIR) $(GRUBDIR) $(KERNEL)
 $(KERNEL): $(MULTIBOOT_OBJ) $(KERNEL_OBJECTS) $(DRIVERS_OBJECTS) $(CPU_OBJECTS) $(CPU_ASM_OBJECTS) $(LIBC_OBJECTS)
 	$(CC) -T linker.ld -o $@ $(CFLAGS) $^ -lgcc
 
+$(KERNEL_SYMBOLS): $(KERNEL)
+	objcopy --only-keep-debug $(KERNEL) $@
+	objcopy --strip-debug $(KERNEL)
+
 $(MULTIBOOT_OBJ): $(MULTIBOOT_SRC)
 	$(ASM) $(MULTIBOOT_ASMFLAGS) $(MULTIBOOT_ASM) -o $@
-
-$(KERNEL_SYMBOLS): $(MULTIBOOT) $(KERNEL_OBJECTS) $(DRIVERS_OBJECTS) $(CPU_OBJECTS) $(CPU_ASM_OBJECTS) $(LIBC_OBJECTS)
-	$(LD) -o $@ $^
 
 $(KERNEL_OBJECTS): $(BUILD_DIR)/$(KERNEL_DIR)/%.o : $(KERNEL_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -90,8 +91,8 @@ boot: $(BUILD_DIR) $(KERNEL)
 debug: CFLAGS += -g -DDEBUG
 debug: MULTIBOOT_ASMFLAGS += -g
 debug: CPU_ASMFLAGS += -g
-debug: clean $(BUILD_DIR) $(ISO) $(KERNEL_SYMBOLS)
-	$(QEMU) -cdrom $(ISO) -s -S &
+debug: clean $(BUILD_DIR) $(KERNEL_SYMBOLS)
+	$(QEMU) -kernel $(KERNEL) -s -S &
 	$(GDB) -ex "set architecture i386:x86-64" -ex "target remote localhost:1234" -ex "symbol-file $(KERNEL_SYMBOLS)"
 
 $(GRUBDIR):
