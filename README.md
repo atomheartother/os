@@ -2,8 +2,10 @@
 
 You need to install the cross-compiling tools with `make tools`.
 
-- To make and boot the kernel directly: `make boot`
-- To make and boot an ISO with GRUB support: `make multiboot`
+You can then `make kernel` to make the kernel, or `make iso` to make a bootable ISO. You can also `make boot` and `make multiboot` to boot these in QEMU, respectively.
+
+## Debugging
+`make debug`
 
 ## Dependencies
 Basic dependencies:

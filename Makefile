@@ -52,6 +52,9 @@ ISO = $(BUILD_DIR)/os.iso
 all: CFLAGS += -O
 all: $(BUILD_DIR) $(KERNEL)
 
+kernel: $(BUILD_DIR) $(KERNEL)
+iso: $(BUILD_DIR) $(ISO)
+
 $(ISO): $(BUILD_DIR) $(GRUBDIR) $(KERNEL)
 	cp $(KERNEL) $(ISO_BOOTDIR)/os.bin
 	cp grub.cfg $(GRUBDIR)/grub.cfg
