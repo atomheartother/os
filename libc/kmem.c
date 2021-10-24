@@ -24,7 +24,7 @@ static void bckByteCopy(void *dest, const void* src, size_t n) {
 }
 
 void memmove(void *dest, const void* src, size_t n) {
-    if (dest == src) return;
+    if (dest == src || !n) return;
     if ((dest > src  && (size_t)(dest - src) >= n) ||
         (dest < src && (size_t)(src - dest) >= n)) {
         // No overlap

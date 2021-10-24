@@ -29,6 +29,22 @@ void printMessageAt(const char* message, uint32_t row, uint32_t col) {
     printAtOffset(message, offset, 0x0f);
 }
 
+void printMessageOverLine(const char* message) {
+  unsigned char row;
+  unsigned char col;
+  getCoordsFromOffset(getCursorOffset(), &row, &col);
+  printMessageAt(message, row, 0);
+  getCoordsFromOffset(getCursorOffset(), &row, &col);
+  const unsigned baseOffset = getOffsetFromCoords(row, col);
+  unsigned offset = baseOffset;
+  unsigned maxOffset = getOffsetFromCoords(row + 1, 0);
+  while (offset < maxOffset) {
+    printCharAtOffset(' ', offset, WHITE_ON_BLACK);
+    offset += 2;
+  }
+  setCursorOffset(baseOffset);
+}
+
 void clearScreen(void) {
     const uint32_t bufferSize = MAX_COLS * MAX_ROWS;
     uint32_t index = 0;
