@@ -68,7 +68,7 @@ void shellRun() {
   if (messageEnd > PROMPT_SIZE) {
     printMessage("Executed: ");
     printMessage(buffer + PROMPT_SIZE);
+    newline();
   }
-  newline();
   shellInit();
 }

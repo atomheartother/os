@@ -8,6 +8,8 @@ int kernel_main() {
     isrInstall();
     irqInstall();
     installPaging();
+    printMessage("Welcome to lizOS!");
+    newline();
     shellInit();
     return 0;
 }
