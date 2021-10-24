@@ -15,3 +15,6 @@ Basic dependencies:
 To create a bootable ISO:
 - `mtools`
 - `libburniso`
+
+To debug:
+- `gdb`
