@@ -49,7 +49,6 @@ _start:
     call kernel_main ; Here goes nothing!
 ; Use this to infinite-loop without using up CPU
 .hang: 
-  cli ; Clear all interrupts
   hlt ; Wait for the next interrupt
   jmp .hang ; Jump back to .hang
 .end:
