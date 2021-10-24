@@ -50,7 +50,7 @@ GRUBDIR = $(ISO_BOOTDIR)/grub
 ISO = $(BUILD_DIR)/os.iso
 
 all: CFLAGS += -O
-all: $(ISO)
+all: $(BUILD_DIR) $(KERNEL)
 
 $(ISO): $(BUILD_DIR) $(GRUBDIR) $(KERNEL)
 	cp $(KERNEL) $(ISO_BOOTDIR)/os.bin
