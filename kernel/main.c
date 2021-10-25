@@ -4,10 +4,11 @@
 #include "shell.h"
 
 int kernel_main() {
-    clearScreen();
     isrInstall();
     irqInstall();
     installPaging();
+    setVideoMode(WHITE_ON_BLACK);
+    clearScreen();
     printMessage("Welcome to lizOS!");
     newline();
     shellInit();

@@ -1,4 +1,5 @@
 #include "shell.h"
+#include "kstring.h"
 #include "screen.h"
 #include "kmem.h"
 
@@ -51,17 +52,18 @@ void shellBackspace() {
 
 // Completely refresh the shell display
 void shellDisplay() {
-  setVideoMode('B');
   printMessageOverLine("> ");
-  buffer[messageEnd] = 0;
-  setVideoMode(WHITE_ON_BLACK);
-  printMessage(buffer);
+  if (messageEnd > 0) {
+    buffer[messageEnd] = 0;
+    printMessage(buffer);
+  }
 }
 
 void shellRun() {
   newline();
   if (messageEnd > 0) {
     printMessage("Executed: ");
+    buffer[messageEnd] = 0;
     printMessage(buffer);
     newline();
   }

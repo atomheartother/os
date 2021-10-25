@@ -1,6 +1,9 @@
 #include "screen.h"
+#include "kstring.h"
 #include "ports.h"
 #include "kmem.h"
+
+static char videoMode = WHITE_ON_BLACK;
 
 /* 
  * Private function prototypes
@@ -12,21 +15,22 @@ static void printAtOffset(const char* message, uint16_t offset, char properties)
 static void getCoordsFromOffset(uint32_t offset, unsigned char* row, unsigned char* col);
 static uint16_t getOffsetFromCoords(unsigned char row, unsigned char col);
 static void printCharAtAddress(char **address, char c, char properties);
+static void scrollUp();
 
 /* 
  * Public functions
  */
 void printMessage(const char* message) {
-    printAtOffset(message, getCursorOffset(), WHITE_ON_BLACK);
+    printAtOffset(message, getCursorOffset(), videoMode);
 }
 
 void printChar(const unsigned char c) {
-    printCharAtOffset(c, getCursorOffset(), WHITE_ON_BLACK);
+    printCharAtOffset(c, getCursorOffset(), videoMode);
 }
 
 void printMessageAt(const char* message, uint32_t row, uint32_t col) {
     const uint16_t offset = getOffsetFromCoords((unsigned char)(row & 0xFF), (unsigned char)(col & 0xFF));
-    printAtOffset(message, offset, 0x0f);
+    printAtOffset(message, offset, videoMode);
 }
 
 void printMessageOverLine(const char* message) {
@@ -34,22 +38,21 @@ void printMessageOverLine(const char* message) {
   unsigned char col;
   getCoordsFromOffset(getCursorOffset(), &row, &col);
   printMessageAt(message, row, 0);
-  getCoordsFromOffset(getCursorOffset(), &row, &col);
-  const unsigned baseOffset = getOffsetFromCoords(row, col);
-  unsigned offset = baseOffset;
-  unsigned maxOffset = getOffsetFromCoords(row + 1, 0);
-  while (offset < maxOffset) {
-    printCharAtOffset(' ', offset, WHITE_ON_BLACK);
-    offset += 2;
+  const uint16_t cursorOffset = getCursorOffset();
+  getCoordsFromOffset(cursorOffset, &row, &col);
+  unsigned maxOffset = getOffsetFromCoords(row, MAX_COLS);
+  char* address = VGA_ADDRESS + cursorOffset;
+  while (address < VGA_ADDRESS + maxOffset) {
+    *(address++) = ' ';
+    *(address++) = videoMode;
   }
-  setCursorOffset(baseOffset);
 }
 
 void clearScreen(void) {
     const uint32_t bufferSize = MAX_COLS * MAX_ROWS;
     uint32_t index = 0;
     while (index < bufferSize) {
-        printCharAtOffset(' ', index * 2, WHITE_ON_BLACK);
+        printCharAtOffset(' ', index * 2, videoMode);
         index += 1;
     }
     setCursorOffset(0);
@@ -59,10 +62,10 @@ void newline(void) {
     unsigned char row;
     unsigned char col;
     getCoordsFromOffset(getCursorOffset(), &row, &col);
-    while (col < MAX_COLS) {
-        printCharAtOffset(' ', getCursorOffset(), WHITE_ON_BLACK);
-        col += 1;
+    if (row == MAX_ROWS - 1) {
+      scrollUp();
     }
+    setCursorOffset(getOffsetFromCoords(row + (row != MAX_ROWS - 1), 0));
 }
 
 void backspace(void) {
@@ -100,13 +103,8 @@ static void printCharAtAddress(char **address, char c, char properties) {
     if (*address + 2 < VGA_END_ADDRESS) {
         *address = *address + 2;
     } else {
-        // Scroll up and put the cursor back to the start of the last line.
-        memcpy(VGA_ADDRESS, VGA_ADDRESS + MAX_COLS * 2, VGA_END_ADDRESS - (VGA_ADDRESS + MAX_COLS * 2));
-        *address = VGA_END_ADDRESS - (MAX_COLS * 2);
-        for (char* ptr = *address ; ptr < VGA_END_ADDRESS ; ptr += 2) {
-            *ptr = ' ';
-            *(ptr + 1) = WHITE_ON_BLACK;
-        }
+      scrollUp();
+      *address = VGA_END_ADDRESS - (MAX_COLS * 2);
     }
 }
 
@@ -132,4 +130,28 @@ static void getCoordsFromOffset(uint32_t offset, unsigned char* row, unsigned ch
 
 static uint16_t getOffsetFromCoords(unsigned char row, unsigned char col) {
     return row * MAX_COLS * 2 + col * 2;
+}
+
+void setVideoMode(char m) {
+  videoMode = m;
+}
+
+char getVideoMode() {
+  return videoMode;
+}
+
+// Scroll the whole screen up one line, erasing the top line
+static void scrollUp() {
+  unsigned row = 0;
+  while (row < MAX_ROWS - 1) {
+    // Copy line-by-line so we can optimize in memcpy
+    char* baseAddr = VGA_ADDRESS + (row * MAX_COLS * 2);
+    memcpy(baseAddr, baseAddr + MAX_COLS * 2, MAX_COLS * 2);
+    row += 1;
+  }
+  // Clear the last line
+  for (char* ptr = VGA_END_ADDRESS - (MAX_COLS * 2); ptr < VGA_END_ADDRESS ; ptr += 2) {
+      *ptr = ' ';
+      *(ptr + 1) = videoMode;
+  }
 }
