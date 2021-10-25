@@ -13,7 +13,9 @@ void installPaging(void) {
     for (unsigned i = 0 ; i < 1024 ; i += 1) {
         // Set i as the address, set the page to present & read/write
         const uint32_t field = (i * 0x1000) | 3;
-        firstPageTable[i] = *(pageTableEntry*)&field;
+        pageTableEntryUnion ptu;
+        ptu.intValue = field;
+        firstPageTable[i] = ptu.entry;
         
     }
     pageDirectory[0].address = (uint32_t)firstPageTable >> 12;

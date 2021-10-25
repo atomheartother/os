@@ -23,7 +23,12 @@ typedef struct {
     unsigned int global      : 1; // Prevents the TLB from updating the address in its cache if CR3 is reset.
     unsigned int available   : 3; // Free space for the OS
     unsigned int address     : 20; // The actual address, 4kB aligned
-}   pageTableEntry;
+}  pageTableEntry;
+
+typedef union {
+  uint32_t intValue;
+  pageTableEntry entry;
+} pageTableEntryUnion;
 
 // Represents a page directory entry. A page directory is made up of 1024 page directory entries.
 // Values from https://wiki.osdev.org/Paging#Page_Directory
