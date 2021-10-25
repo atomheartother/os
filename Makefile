@@ -11,12 +11,11 @@ GDB = gdb
 
 CC = ./cross-tools/bin/i386-elf-gcc 
 CFLAGS := -Wall -Wextra -Werror
-CFLAGS += -m32 -fno-builtin -fno-stack-protector -nostartfiles -nodefaultlibs -nostdlib
+CFLAGS += -m32 -fno-stack-protector -nostdlib -ffreestanding
 CFLAGS += -I$(KERNEL_DIR)
 CFLAGS += -I$(DRIVERS_DIR)
 CFLAGS += -I$(CPU_DIR)
 CFLAGS += -I$(LIBC_DIR)
-CFLAGS += -ffreestanding
 
 LD = ./cross-tools/bin/i386-elf-ld
 LD_SOURCES=./cross-tools/binutils.tar.gz
