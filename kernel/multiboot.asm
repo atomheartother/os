@@ -3,17 +3,31 @@ MAGIC equ 0x1BADB002
 ; Multiboot flags
 MBALIGN equ 1 << 0 ; Align loaded modules on page boundaries
 MEMINFO equ 1 << 1 ; Provide a memory map
-FLAGS equ MBALIGN | MEMINFO
+AOUTKLUDGE equ 1 << 16 ; We will provide address information
+
+FLAGS equ MBALIGN | MEMINFO | AOUTKLUDGE 
 ; Checksum so that CHECKSUM + MAGIC + FLAGS == 0 to prove we are multiboot
 CHECKSUM equ -(MAGIC + FLAGS)
+
+extern _textSectionStart
+extern _dataSectionEnd
+extern _bssSectionEnd
 
 ; Write our multiboot header
 ; Bootloader will search for this, aligned at a 32bit boundary
 section .multiboot
+mbootHeader:
 align 4
+; Magic values, required
   dd MAGIC
   dd FLAGS
   dd CHECKSUM
+; Addresses, because we set flags bit 16
+  dd mbootHeader
+  dd _textSectionStart
+  dd _dataSectionEnd
+  dd _bssSectionEnd
+  dd _start
 
 ; Make a 16KiB stack, 16-bit aligned
 section .bss
