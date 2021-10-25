@@ -3,22 +3,14 @@
 #include "kmem.h"
 
 #define BUFFER_SIZE 256
-#define PROMPT_SIZE 2
 
 static char buffer[BUFFER_SIZE];
 static unsigned int bufferIdx;
 static unsigned int messageEnd;
 
-static void initShellIdx() {
-  bufferIdx = PROMPT_SIZE;
-  messageEnd = PROMPT_SIZE;
-}
-
 void shellInit() {
-  // The shel buffer includes the prompt so displaying the shell is faster
-  buffer[0] = '>';
-  buffer[1] = ' ';
-  initShellIdx();
+  bufferIdx = 0;
+  messageEnd = 0;
   shellDisplay();
 }
 
@@ -41,7 +33,7 @@ void shellInput(const char c) {
 }
 
 void shellBackspace() {
-  if (bufferIdx <= PROMPT_SIZE) {
+  if (bufferIdx <= 0) {
     return;
   }
   const char refreshDisplay = bufferIdx < messageEnd;
@@ -59,15 +51,18 @@ void shellBackspace() {
 
 // Completely refresh the shell display
 void shellDisplay() {
+  setVideoMode('B');
+  printMessageOverLine("> ");
   buffer[messageEnd] = 0;
-  printMessageOverLine(buffer);
+  setVideoMode(WHITE_ON_BLACK);
+  printMessage(buffer);
 }
 
 void shellRun() {
   newline();
-  if (messageEnd > PROMPT_SIZE) {
+  if (messageEnd > 0) {
     printMessage("Executed: ");
-    printMessage(buffer + PROMPT_SIZE);
+    printMessage(buffer);
     newline();
   }
   shellInit();
