@@ -13,22 +13,25 @@ SECTIONS
 	   Next we'll put the .text section. */
 	.text BLOCK(4K) : ALIGN(4K)
 	{
-        _textSectionStart = .;
+        /* _textSectionStart = .;*/
 		*(.multiboot)
 		*(.text)
+        *(.eh_frame)
 	}
  
 	/* Read-only data. */
 	.rodata BLOCK(4K) : ALIGN(4K)
 	{
 		*(.rodata)
+        *(.rodata.str1.1)
+        *(.rodata.str1.4)
 	}
  
 	/* Read-write data (initialized) */
 	.data BLOCK(4K) : ALIGN(4K)
 	{
 		*(.data)
-        _dataSectionEnd = .;
+        /* _dataSectionEnd = .; */
 	}
  
 	/* Read-write data (uninitialized) and stack */
@@ -36,7 +39,7 @@ SECTIONS
 	{
 		*(COMMON)
 		*(.bss)
-        _bssSectionEnd = .;
+        /* _bssSectionEnd = .; */
 	}
  
 	/* The compiler may produce other sections, by default it will put them in

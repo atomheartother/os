@@ -5,7 +5,7 @@ MBALIGN equ 1 << 0 ; Align loaded modules on page boundaries
 MEMINFO equ 1 << 1 ; Provide a memory map
 AOUTKLUDGE equ 1 << 16 ; We will provide address information
 
-FLAGS equ MBALIGN | MEMINFO | AOUTKLUDGE 
+FLAGS equ MBALIGN | MEMINFO ; | AOUTKLUDGE 
 ; Checksum so that CHECKSUM + MAGIC + FLAGS == 0 to prove we are multiboot
 CHECKSUM equ -(MAGIC + FLAGS)
 
@@ -22,12 +22,12 @@ align 4
   dd MAGIC
   dd FLAGS
   dd CHECKSUM
-; Addresses, because we set flags bit 16
-  dd mbootHeader
-  dd _textSectionStart
-  dd _dataSectionEnd
-  dd _bssSectionEnd
-  dd _start
+; Addresses, if we set flags bit 16
+;  dd mbootHeader
+;  dd _textSectionStart
+;  dd _dataSectionEnd
+;  dd _bssSectionEnd
+;  dd _start
 
 ; Make a 16KiB stack, 16-bit aligned
 section .bss
