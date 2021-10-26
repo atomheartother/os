@@ -3,9 +3,10 @@
 #include "screen.h"
 #include <stdint.h>
 
+static pageDirectoryEntry pageDirectory[1024]  __attribute__((aligned(4096)));
+static pageTableEntry firstPageTable[1024] __attribute__((aligned(4096)));
+
 void installPaging(void) {
-    pageDirectoryEntry pageDirectory[1024]  __attribute__((aligned(4096)));
-    pageTableEntry firstPageTable[1024] __attribute__((aligned(4096)));
     const pageDirectoryEntry emptyPage = { .writeable = 1 };
     for (unsigned i = 0 ; i < 1024 ; i += 1) {
         pageDirectory[i] = emptyPage;
