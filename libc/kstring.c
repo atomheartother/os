@@ -28,3 +28,14 @@ void int_to_ascii(int n, char str[]) {
 
     reverse(str);
 }
+
+void uint_to_ascii(uint32_t n, char str[]) {
+    uint32_t i = 0;
+    do {
+        str[i++] = n % 10 + '0';
+    } while ((n /= 10) > 0);
+
+    str[i] = '\0';
+
+    reverse(str);
+}
