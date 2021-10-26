@@ -55,10 +55,6 @@ _start:
     mov fs, ax
     mov gs, ax
 
-    ; We should be good to go.
-    ; Re-enable interrupts
-    sti
-
     extern kernel_main
     call kernel_main ; Here goes nothing!
 ; Use this to infinite-loop without using up CPU
