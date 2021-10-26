@@ -95,7 +95,7 @@ debug: MULTIBOOT_ASMFLAGS += -g
 debug: CPU_ASMFLAGS += -g
 debug: clean $(BUILD_DIR) $(KERNEL_SYMBOLS)
 	$(QEMU) -kernel $(KERNEL) -s -S &
-	$(GDB) -ex "set architecture i386:x86-64" -ex "target remote localhost:1234" -ex "symbol-file $(KERNEL_SYMBOLS)"
+	$(GDB) -ex "target remote localhost:1234" -ex "symbol-file $(KERNEL_SYMBOLS)"
 
 $(GRUBDIR):
 	@mkdir -p $(GRUBDIR)
