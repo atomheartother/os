@@ -36,11 +36,12 @@ void printChar(const unsigned char c);
 void backspace(void);
 // Print a message to terminal and advance the cursor after the message
 void printMessage(const char* message);
+void printMessageMode(const char* message, char mode);
 // Print a message over the current line, then put the cursor after the printed message
 // This is useful for shells.
-void printMessageOverLine(const char* message);
+void printMessageOverLine(const char* message, char mode);
 // Print a message at a specific row/col location, for overlays maybe?
-void printMessageAt(const char* message, uint32_t row, uint32_t col);
+void printMessageAt(const char* message, uint32_t row, uint32_t col, char mode);
 // Print a newline
 void newline(void);
 // Clear the screen completely

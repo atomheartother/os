@@ -3,7 +3,7 @@
 #include "screen.h"
 #include "kmem.h"
 
-#define BUFFER_SIZE 256
+#define BUFFER_SIZE 32
 
 static char buffer[BUFFER_SIZE];
 static unsigned int bufferIdx;
@@ -19,40 +19,23 @@ void shellInput(const char c) {
   if (bufferIdx >= BUFFER_SIZE) {
     return;
   }
-  char refreshDisplay = bufferIdx < messageEnd;
-  if (refreshDisplay) {
-    // Offset the whole buffer, we're inserting
-    memmove(buffer+bufferIdx+1, buffer+bufferIdx, messageEnd - bufferIdx);
-  }
   buffer[bufferIdx++] = c;
   messageEnd += 1;
-  if (refreshDisplay) {
-    shellDisplay();
-  } else {
-    printChar(c);
-  }
+  printChar(c);
 }
 
 void shellBackspace() {
   if (bufferIdx <= 0) {
     return;
   }
-  const char refreshDisplay = bufferIdx < messageEnd;
-  if (refreshDisplay) {
-    memmove(buffer+bufferIdx, buffer+bufferIdx+1, messageEnd - bufferIdx);
-  }
   buffer[--messageEnd] = 0;
   bufferIdx -= 1;
-  if (refreshDisplay) {
-    shellDisplay();
-  } else {
-    backspace();
-  }
+  backspace();
 }
 
 // Completely refresh the shell display
 void shellDisplay() {
-  printMessageOverLine("> ");
+  printMessageOverLine("> ", FG_BRIGHT | FG_Red);
   if (messageEnd > 0) {
     buffer[messageEnd] = 0;
     printMessage(buffer);
@@ -62,7 +45,7 @@ void shellDisplay() {
 void shellRun() {
   newline();
   if (messageEnd > 0) {
-    printMessage("Executed: ");
+    printMessageMode("Executed: ", 'b');
     buffer[messageEnd] = 0;
     printMessage(buffer);
     newline();

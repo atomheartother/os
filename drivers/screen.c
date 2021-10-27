@@ -24,20 +24,24 @@ void printMessage(const char* message) {
     printAtOffset(message, getCursorOffset(), videoMode);
 }
 
+void printMessageMode(const char* message, char mode) {
+    printAtOffset(message, getCursorOffset(), mode);
+}
+
 void printChar(const unsigned char c) {
     printCharAtOffset(c, getCursorOffset(), videoMode);
 }
 
-void printMessageAt(const char* message, uint32_t row, uint32_t col) {
+void printMessageAt(const char* message, uint32_t row, uint32_t col, char mode) {
     const uint16_t offset = getOffsetFromCoords((unsigned char)(row & 0xFF), (unsigned char)(col & 0xFF));
-    printAtOffset(message, offset, videoMode);
+    printAtOffset(message, offset, mode);
 }
 
-void printMessageOverLine(const char* message) {
+void printMessageOverLine(const char* message, char mode) {
   unsigned char row;
   unsigned char col;
   getCoordsFromOffset(getCursorOffset(), &row, &col);
-  printMessageAt(message, row, 0);
+  printMessageAt(message, row, 0, mode);
   const uint16_t cursorOffset = getCursorOffset();
   getCoordsFromOffset(cursorOffset, &row, &col);
   unsigned maxOffset = getOffsetFromCoords(row, MAX_COLS);
@@ -99,7 +103,7 @@ static void setCursorOffset(uint32_t offset) {
 
 static void printCharAtAddress(char **address, char c, char properties) {
     *(*address) = c;
-    *(*(address + 1)) = properties;
+    *((*address) + 1) = properties;
     if (*address + 2 < VGA_END_ADDRESS) {
         *address = *address + 2;
     } else {
