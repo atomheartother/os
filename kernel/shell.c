@@ -45,7 +45,7 @@ void shellDisplay() {
 void shellRun() {
   newline();
   if (messageEnd > 0) {
-    printMessageMode("Executed: ", 'b');
+    printMessageMode("Executed: ", FG_BRIGHT | FG_Magenta);
     buffer[messageEnd] = 0;
     printMessage(buffer);
     newline();
