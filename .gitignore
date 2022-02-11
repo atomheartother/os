@@ -3,3 +3,4 @@ build
 .gdb_history
 .cache
 .vscode
+.ccls-cache
