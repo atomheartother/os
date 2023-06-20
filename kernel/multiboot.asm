@@ -44,6 +44,9 @@ _start:
     ; Set up the stack so C can function
     mov esp, stack_bottom
 
+    push ebx
+    push eax
+
     cli ; Disable interrupts
     lgdt [gdt_descriptor] ; Load gdt
     jmp CODE_SEG:.reloadSegments
