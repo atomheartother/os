@@ -96,8 +96,8 @@ $(CPU_ASM_OBJECTS): $(BUILD_DIR)/$(CPU_DIR)%.asm.o : $(CPU_DIR)/%.asm
 multiboot: $(ISO)
 	$(QEMU) -cdrom $(ISO)
 
-boot: $(BUILD_DIR) $(KERNEL)
-	$(QEMU) -kernel  $(KERNEL)
+boot: $(BUILD_DIR) $(KERNEL) $(INITRD)
+	$(QEMU) -kernel  $(KERNEL) -initrd $(INITRD)
 
 debug: CFLAGS += -g -DDEBUG
 debug: MULTIBOOT_ASMFLAGS += -g
