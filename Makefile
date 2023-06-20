@@ -38,6 +38,9 @@ MULTIBOOT_ASM = $(KERNEL_DIR)/multiboot.asm
 MULTIBOOT_SRC = $(MULTIBOOT_ASM) \
 				$(KERNEL_DIR)/32b_gdt.asm
 
+INITRD_DIR=./initrd
+INITRD_SOURCES=$(wildcard $(INITRD_DIR)/*)
+
 MULTIBOOT_OBJ = $(BUILD_DIR)/multiboot.o
 
 KERNEL = $(BUILD_DIR)/kernel.bin
@@ -45,6 +48,7 @@ KERNEL_SYMBOLS = $(BUILD_DIR)/kernel.elf
 
 ISO_DIR = $(BUILD_DIR)/iso
 ISO_BOOTDIR = $(ISO_DIR)/boot
+INITRD = $(ISO_BOOTDIR)/os.initrd
 GRUBDIR = $(ISO_BOOTDIR)/grub
 ISO = $(BUILD_DIR)/os.iso
 
@@ -53,11 +57,16 @@ all: $(BUILD_DIR) $(KERNEL)
 
 kernel: $(BUILD_DIR) $(KERNEL)
 iso: $(BUILD_DIR) $(ISO)
+initrd: $(INITRD)
 
-$(ISO): $(BUILD_DIR) $(GRUBDIR) $(KERNEL)
+$(ISO): $(BUILD_DIR) $(GRUBDIR) $(KERNEL) $(INITRD)
 	cp $(KERNEL) $(ISO_BOOTDIR)/os.bin
 	cp grub.cfg $(GRUBDIR)/grub.cfg
 	grub-mkrescue -o $@ $(ISO_DIR)
+
+$(INITRD): $(INITRD_SOURCES)
+	echo $^
+	tar --format=ustar -cf $@ $^
 
 $(KERNEL): $(MULTIBOOT_OBJ) $(KERNEL_OBJECTS) $(DRIVERS_OBJECTS) $(CPU_OBJECTS) $(CPU_ASM_OBJECTS) $(LIBC_OBJECTS)
 	$(CC) -T linker.ld -o $@ $(CFLAGS) $^ -lgcc

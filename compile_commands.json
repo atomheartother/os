@@ -2,13 +2,12 @@
   {
     "arguments": [
       "./cross-tools/bin/i386-elf-gcc",
-      "-ffreestanding",
       "-Wall",
       "-Wextra",
       "-Werror",
       "-m32",
-      "-fno-builtin",
       "-fno-stack-protector",
+      "-ffreestanding",
       "-Ikernel",
       "-Idrivers",
       "-Icpu",
@@ -26,13 +25,35 @@
   {
     "arguments": [
       "./cross-tools/bin/i386-elf-gcc",
-      "-ffreestanding",
       "-Wall",
       "-Wextra",
       "-Werror",
       "-m32",
-      "-fno-builtin",
       "-fno-stack-protector",
+      "-ffreestanding",
+      "-Ikernel",
+      "-Idrivers",
+      "-Icpu",
+      "-Ilibc",
+      "-O",
+      "-c",
+      "-o",
+      "build/kernel/shell.o",
+      "kernel/shell.c"
+    ],
+    "directory": "/home/navenn_t/Programming/Personal/os",
+    "file": "/home/navenn_t/Programming/Personal/os/kernel/shell.c",
+    "output": "/home/navenn_t/Programming/Personal/os/build/kernel/shell.o"
+  },
+  {
+    "arguments": [
+      "./cross-tools/bin/i386-elf-gcc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-m32",
+      "-fno-stack-protector",
+      "-ffreestanding",
       "-Ikernel",
       "-Idrivers",
       "-Icpu",
@@ -50,13 +71,12 @@
   {
     "arguments": [
       "./cross-tools/bin/i386-elf-gcc",
-      "-ffreestanding",
       "-Wall",
       "-Wextra",
       "-Werror",
       "-m32",
-      "-fno-builtin",
       "-fno-stack-protector",
+      "-ffreestanding",
       "-Ikernel",
       "-Idrivers",
       "-Icpu",
@@ -74,13 +94,12 @@
   {
     "arguments": [
       "./cross-tools/bin/i386-elf-gcc",
-      "-ffreestanding",
       "-Wall",
       "-Wextra",
       "-Werror",
       "-m32",
-      "-fno-builtin",
       "-fno-stack-protector",
+      "-ffreestanding",
       "-Ikernel",
       "-Idrivers",
       "-Icpu",
@@ -98,13 +117,12 @@
   {
     "arguments": [
       "./cross-tools/bin/i386-elf-gcc",
-      "-ffreestanding",
       "-Wall",
       "-Wextra",
       "-Werror",
       "-m32",
-      "-fno-builtin",
       "-fno-stack-protector",
+      "-ffreestanding",
       "-Ikernel",
       "-Idrivers",
       "-Icpu",
@@ -122,13 +140,12 @@
   {
     "arguments": [
       "./cross-tools/bin/i386-elf-gcc",
-      "-ffreestanding",
       "-Wall",
       "-Wextra",
       "-Werror",
       "-m32",
-      "-fno-builtin",
       "-fno-stack-protector",
+      "-ffreestanding",
       "-Ikernel",
       "-Idrivers",
       "-Icpu",
@@ -146,13 +163,12 @@
   {
     "arguments": [
       "./cross-tools/bin/i386-elf-gcc",
-      "-ffreestanding",
       "-Wall",
       "-Wextra",
       "-Werror",
       "-m32",
-      "-fno-builtin",
       "-fno-stack-protector",
+      "-ffreestanding",
       "-Ikernel",
       "-Idrivers",
       "-Icpu",
@@ -170,13 +186,12 @@
   {
     "arguments": [
       "./cross-tools/bin/i386-elf-gcc",
-      "-ffreestanding",
       "-Wall",
       "-Wextra",
       "-Werror",
       "-m32",
-      "-fno-builtin",
       "-fno-stack-protector",
+      "-ffreestanding",
       "-Ikernel",
       "-Idrivers",
       "-Icpu",
@@ -194,13 +209,12 @@
   {
     "arguments": [
       "./cross-tools/bin/i386-elf-gcc",
-      "-ffreestanding",
       "-Wall",
       "-Wextra",
       "-Werror",
       "-m32",
-      "-fno-builtin",
       "-fno-stack-protector",
+      "-ffreestanding",
       "-Ikernel",
       "-Idrivers",
       "-Icpu",
@@ -218,13 +232,12 @@
   {
     "arguments": [
       "./cross-tools/bin/i386-elf-gcc",
-      "-ffreestanding",
       "-Wall",
       "-Wextra",
       "-Werror",
       "-m32",
-      "-fno-builtin",
       "-fno-stack-protector",
+      "-ffreestanding",
       "-Ikernel",
       "-Idrivers",
       "-Icpu",
