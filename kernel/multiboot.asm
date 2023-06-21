@@ -11,7 +11,7 @@ CHECKSUM equ -(MAGIC + FLAGS)
 
 extern _textSectionStart
 extern _dataSectionEnd
-extern _bssSectionEnd
+extern _bssSectionStart
 
 ; Write our multiboot header
 ; Bootloader will search for this, aligned at a 32bit boundary
@@ -29,20 +29,13 @@ align 4
 ;  dd _bssSectionEnd
 ;  dd _start
 
-; Make a 16KiB stack, 16-bit aligned
-section .bss
-align 16
-stack_top:
-resb 16384
-stack_bottom:
-
 section .text
 global _start:function (_start.end - _start)
 _start:
 	; The bootloader has loaded us into 32-bit protected mode on a x86
 	; machine. Interrupts are disabled. Paging is disabled.
     ; Set up the stack so C can function
-    mov esp, stack_bottom
+    mov esp, _bssSectionStart
 
     push ebx
     push eax
