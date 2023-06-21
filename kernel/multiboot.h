@@ -3,7 +3,10 @@
 
 #include <stdint.h>
 
-/* The symbol table for a.out. */
+/**
+ * Multiboot info structs
+ * Copied from https://www.gnu.org/software/grub/manual/multiboot/multiboot.html#Boot-information-format
+ */
 typedef struct multiboot_aout_symbol_table
 {
   uint32_t tabsize;
@@ -98,5 +101,16 @@ typedef struct multiboot_info
     };
   };
 } multiboot_info_t;
+
+typedef struct multibootModule {
+  uint32_t start;
+  uint32_t end;
+  uint32_t str;
+  uint32_t reserved; // This is always 0
+} multibootModule;
+
+// Multiboot module parsing
+multibootModule** initModules(multiboot_info_t* mbinfo);
+void destroyModules(multibootModule** modules);
 
 #endif
