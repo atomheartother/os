@@ -49,7 +49,7 @@ INITRD = $(BUILD_DIR)/os.initrd
 
 ISO_DIR = $(BUILD_DIR)/iso
 ISO_BOOTDIR = $(ISO_DIR)/boot
-ISO_INITRD = $(ISO_BOOTDIR)/os.initrd
+ISO_INITRD = $(ISO_DIR)/os.initrd
 GRUBDIR = $(ISO_BOOTDIR)/grub
 ISO = $(BUILD_DIR)/os.iso
 
