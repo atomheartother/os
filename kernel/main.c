@@ -6,6 +6,18 @@
 #include "debug.h"
 #include "tar.h"
 
+uint32_t intFromTarOctal(char* buf, uint8_t size) {
+  // Check the buffer is zero-terminated
+  uint32_t n = 0;
+
+  for (uint8_t i=0; i < size ; i += 1) {
+    if (buf[i] < '0' || buf[i] > '7') return n;
+    n += n * 010 + (buf[i] - '0');
+  }
+  // number wasn't 0-terminated, we return 0
+  return 0;
+}
+
 int kernel_main(uint32_t magic, multiboot_info_t* mbi) {
     isrInstall();
     irqInstall();
@@ -34,23 +46,25 @@ int kernel_main(uint32_t magic, multiboot_info_t* mbi) {
       initrdTar = (tarHeader*)m->start;
     }
 
-    uint32_t fileIdx=0;
     while (*(initrdTar->name)) {
-      printMessage("initrd file ");
-      printHex(fileIdx);
-      newline();
-
       printMessage("name: ");
       printMessage(initrdTar->name);
       newline();
 
       char* tarContents = (char*)initrdTar + sizeof(tarHeader);
-      printMessage("contents: ");
-      printMessage(tarContents);
+      //printMessage("contents: ");
+      //printMessage(tarContents);
+      // newline();
+
+      uint32_t size = intFromTarOctal(initrdTar->size, 12);
+      uint8_t blocks = (size/512) + 1;
+
+      printMessage("size: ");
+      printHex(size);
+
       newline();
       newline();
-      initrdTar = (tarHeader*)(tarContents + 512);
-      fileIdx+=1;
+      initrdTar = (tarHeader*)(tarContents + 512 * blocks);
     }
     //printMessage("Welcome to lizOS!");
     //newline();
