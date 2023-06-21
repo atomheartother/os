@@ -4,6 +4,7 @@
 #include "shell.h"
 #include "multiboot.h"
 #include "debug.h"
+#include "tar.h"
 
 int kernel_main(uint32_t magic, multiboot_info_t* mbi) {
     isrInstall();
@@ -24,25 +25,33 @@ int kernel_main(uint32_t magic, multiboot_info_t* mbi) {
 
     uint32_t i;
     multibootModule* m;
+    tarHeader* initrdTar;
     for (
           i = 0, m = (multibootModule*) mbi->mods_addr;
           i < mbi->mods_count;
           i++, m++
         ) {
-      printMessage("Module starting at ");
-      printHex(m->start);
-      printMessage(", ending at ");
-      printHex(m->end);
-      if (m->str) {
-        printMessage(". Str: ");
-        printMessage((char*) m->str);
-      }
-      newline();
-      printMessage("First string: ");
-      printMessage((char*) m->start);
-      newline();
+      initrdTar = (tarHeader*)m->start;
     }
 
+    uint32_t fileIdx=0;
+    while (*(initrdTar->name)) {
+      printMessage("initrd file ");
+      printHex(fileIdx);
+      newline();
+
+      printMessage("name: ");
+      printMessage(initrdTar->name);
+      newline();
+
+      char* tarContents = (char*)initrdTar + sizeof(tarHeader);
+      printMessage("contents: ");
+      printMessage(tarContents);
+      newline();
+      newline();
+      initrdTar = (tarHeader*)(tarContents + 512);
+      fileIdx+=1;
+    }
     //printMessage("Welcome to lizOS!");
     //newline();
     //shellInit();

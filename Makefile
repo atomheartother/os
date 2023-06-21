@@ -58,6 +58,7 @@ all: $(BUILD_DIR) $(KERNEL)
 
 kernel: $(BUILD_DIR) $(KERNEL)
 iso: $(BUILD_DIR) $(ISO)
+initrd: $(INITRD)
 
 $(ISO): $(BUILD_DIR) $(GRUBDIR) $(KERNEL) $(ISO_INITRD)
 	cp $(KERNEL) $(ISO_BOOTDIR)/os.bin
@@ -68,7 +69,7 @@ $(ISO_INITRD): $(INITRD)
 	cp $(INITRD) $@
 
 $(INITRD): $(INITRD_SOURCES)
-	tar --format=ustar -cf $@ $^
+	tar -b 1 --format=ustar -cf $@ $^
 
 $(KERNEL): $(MULTIBOOT_OBJ) $(KERNEL_OBJECTS) $(DRIVERS_OBJECTS) $(CPU_OBJECTS) $(CPU_ASM_OBJECTS) $(LIBC_OBJECTS)
 	$(CC) -T linker.ld -o $@ $(CFLAGS) $^ -lgcc
@@ -104,8 +105,8 @@ boot: $(BUILD_DIR) $(KERNEL) $(INITRD)
 debug: CFLAGS += -g -DDEBUG
 debug: MULTIBOOT_ASMFLAGS += -g
 debug: CPU_ASMFLAGS += -g
-debug: clean $(BUILD_DIR) $(KERNEL_SYMBOLS)
-	$(QEMU) -kernel $(KERNEL) -s -S &
+debug: clean $(BUILD_DIR) $(KERNEL_SYMBOLS) $(INITRD)
+	$(QEMU) -kernel $(KERNEL) -initrd $(INITRD) -s -S &
 	$(GDB) -ex "target remote localhost:1234" -ex "symbol-file $(KERNEL_SYMBOLS)"
 
 $(GRUBDIR):

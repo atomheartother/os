@@ -9,10 +9,12 @@ You can then `make kernel` to make the kernel, or `make iso` to make a bootable 
 
 ## Dependencies
 Basic dependencies:
-- `nasm`
-- `gcc`
-- `make`
-- `qemu`
+- `nasm` (To compile assembly)
+- `gcc` (To compile C)
+- `make` (To make!)
+
+To emulate booting:
+- `qemu` 
 
 To create a bootable ISO:
 - `mtools`
