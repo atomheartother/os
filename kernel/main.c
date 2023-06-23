@@ -10,6 +10,8 @@ extern uint32_t _kernelEnd;
 extern uint32_t _kernelStart;
 
 #define CHECK_FLAG(flags,bit)   ((flags) & (1 << (bit)))
+#define KERNEL_START (uint32_t)&_kernelStart
+#define KERNEL_END (uint32_t)&_kernelEnd
 
 uint32_t intFromTarOctal(char* buf, uint8_t size) {
   // Check the buffer is zero-terminated
@@ -31,49 +33,61 @@ int kernel_main(uint32_t magic, multiboot_info_t* mbi) {
     clearScreen();
     
     if (magic != 0x2BADB002) {
-      printMessage("Error: This OS must be started in a multiboot context.");
+      printMessage("[Kernel Init] Error: This OS must be started in a multiboot context.");
       return 1;
     }
 
     if (mbi->mods_count < 1) {
-      printMessage("Error: There should be one provided module (initrd)");
+      printMessage("[Kernel Init] Error: There should be one provided module (initrd)");
       return 2;
     }
 
+    if (!CHECK_FLAG(mbi->flags, 6)) {
+      printMessage("[Kernel Init] Error: BIOS did not provide us with a memory map.");
+      return 3;
+    }
 
-    printMessage("flags: ");
-    printHex(mbi->flags);
-    newline();
-    printMessage("memLwr: ");
-    printHex(mbi->mem_lower);
-    newline();
-    printMessage("memUpr: ");
-    printHex(mbi->mem_upper + 1000);
-    newline();
-    printMessage("kStart: ");
-    printHex((uint32_t)&_kernelStart);
-    newline();
-    printMessage("kEnd:   ");
-    printHex((uint32_t)&_kernelEnd);
-    newline();
-    newline();
-    if (CHECK_FLAG(mbi->flags, 6)) {
-      multiboot_memory_map_t* buf = (multiboot_memory_map_t*) mbi->mmap_addr;
-      while ((uint32_t)buf < mbi->mmap_addr + mbi->mmap_length) {
-        printMessage("addr: ");
-        printHex(buf->addr_high);
-        printMessage("-");
-        printHex(buf->addr_low);
-        printMessage(", lgth: ");
-        printHex(buf->len_high);
-        printMessage("-");
-        printHex(buf->len_low);
-        printMessage(buf->type == MULTIBOOT_MEMORY_AVAILABLE ? ", available" : ", reserved");
-        newline();
-
-        buf = (multiboot_memory_map_t*)((uint32_t)buf + buf->size + sizeof(buf->size));
+    
+    multiboot_memory_map_t* largestAvailableRegion = 0;
+    for (
+        multiboot_memory_map_t* buf = (multiboot_memory_map_t*) mbi->mmap_addr;
+        (uint32_t)buf < mbi->mmap_addr + mbi->mmap_length;
+         buf = (multiboot_memory_map_t*)((uint32_t)buf + buf->size + sizeof(buf->size))
+        ) {
+      if (
+          !(KERNEL_START <= buf->addr_low && KERNEL_END >= buf->addr_low + buf->len_low) &&
+          buf->type == MULTIBOOT_MEMORY_AVAILABLE &&
+          (!largestAvailableRegion || (buf->len_low > largestAvailableRegion->len_low && buf->len_high >= largestAvailableRegion->len_high))) {
+        largestAvailableRegion = buf;
       }
     }
+
+    if (!largestAvailableRegion) {
+      printMessage("[Kernel Init] Error: No available memory.");
+      return 3;
+    }
+
+    uint32_t memStart = largestAvailableRegion->addr_low;
+    uint32_t memEnd = largestAvailableRegion->addr_low + largestAvailableRegion->len_low;
+    if (memStart < KERNEL_END && memEnd > KERNEL_END) {
+      //     |--- MEMORY ---|
+      // -- KRNL --|
+      memStart = KERNEL_END; 
+    } else if (KERNEL_START < memEnd && KERNEL_START > memStart) {
+      // |--- MEMORY ---|
+      //         |-- KRNL --|
+      memEnd = KERNEL_START;
+    } else if (KERNEL_START > memStart && KERNEL_END < memEnd) {
+      // |----- MEMORY -----|
+      //    |-- KRNL --|
+      uint32_t startGap = KERNEL_START - memStart;
+      uint32_t endGap = memEnd - KERNEL_END;
+      memStart = (startGap > endGap) * memStart + (endGap > startGap) * KERNEL_END;
+      memEnd = (startGap > endGap) * KERNEL_START + (endGap > startGap) * memEnd;
+    }
+
+    printHex(memStart);
+
     if (CHECK_FLAG(mbi->flags, 7)) {
       printMessage("drives_length: ");
       printHex(mbi->drives_length);
