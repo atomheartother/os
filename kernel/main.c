@@ -68,7 +68,7 @@ int kernel_main(uint32_t magic, multiboot_info_t* mbi) {
         printHex(buf->len_high);
         printMessage("-");
         printHex(buf->len_low);
-        printMessage(buf->type == 1 ? ", available" : ", reserved");
+        printMessage(buf->type == MULTIBOOT_MEMORY_AVAILABLE ? ", available" : ", reserved");
         newline();
 
         buf = (multiboot_memory_map_t*)((uint32_t)buf + buf->size + sizeof(buf->size));
