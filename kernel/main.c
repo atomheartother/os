@@ -58,13 +58,21 @@ int kernel_main(uint32_t magic, multiboot_info_t* mbi) {
     newline();
     newline();
     if (CHECK_FLAG(mbi->flags, 6)) {
-      printMessage("mmap length: ");
-      printHex(mbi->mmap_length);
-      newline();
-      printMessage("mmap addr: ");
-      printHex(mbi->mmap_addr);
-      newline();
-      newline();
+      multiboot_memory_map_t* buf = (multiboot_memory_map_t*) mbi->mmap_addr;
+      while ((uint32_t)buf < mbi->mmap_addr + mbi->mmap_length) {
+        printMessage("addr: ");
+        printHex(buf->addr_high);
+        printMessage("-");
+        printHex(buf->addr_low);
+        printMessage(", lgth: ");
+        printHex(buf->len_high);
+        printMessage("-");
+        printHex(buf->len_low);
+        printMessage(buf->type == 1 ? ", available" : ", reserved");
+        newline();
+
+        buf = (multiboot_memory_map_t*)((uint32_t)buf + buf->size + sizeof(buf->size));
+      }
     }
     if (CHECK_FLAG(mbi->flags, 7)) {
       printMessage("drives_length: ");
@@ -76,7 +84,7 @@ int kernel_main(uint32_t magic, multiboot_info_t* mbi) {
       newline();
     }
 
-    if (CHECK_FLAG(mbi->flags, 3)) {
+    if (0 && CHECK_FLAG(mbi->flags, 3)) {
       uint32_t i;
       multibootModule* m;
       tarHeader* initrdTar;

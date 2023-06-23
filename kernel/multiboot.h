@@ -109,6 +109,22 @@ typedef struct multibootModule {
   uint32_t reserved; // This is always 0
 } multibootModule;
 
+struct multiboot_mmap_entry
+{
+  uint32_t size;
+  uint32_t addr_low;
+  uint32_t addr_high;
+  uint32_t len_low;
+  uint32_t len_high;
+#define MULTIBOOT_MEMORY_AVAILABLE              1
+#define MULTIBOOT_MEMORY_RESERVED               2
+#define MULTIBOOT_MEMORY_ACPI_RECLAIMABLE       3
+#define MULTIBOOT_MEMORY_NVS                    4
+#define MULTIBOOT_MEMORY_BADRAM                 5
+  uint32_t type;
+} __attribute__((packed));
+typedef struct multiboot_mmap_entry multiboot_memory_map_t;
+
 // Multiboot module parsing
 multibootModule** initModules(multiboot_info_t* mbinfo);
 void destroyModules(multibootModule** modules);
