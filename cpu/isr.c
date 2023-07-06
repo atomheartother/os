@@ -77,14 +77,41 @@ void isrInstall()
     initIdt();
 }
 
+static char *exceptions[] = {[0] = "Division by Zero",
+                             [1] = "Debug",
+                             [2] = "Non Maskable Interrupt",
+                             [3] = "Breakpoint",
+                             [4] = "Overflow",
+                             [5] = "Bound Range Exceeded",
+                             [6] = "Invalid opcode",
+                             [7] = "Device not available",
+                             [8] = "Double Fault",
+                             [10] = "Invalid TSS",
+                             [11] = "Segment not present",
+                             [12] = "Stack Exception",
+                             [13] = "General Protection fault",
+                             [14] = "Page fault",
+                             [16] = "x87 Floating Point Exception",
+                             [17] = "Alignment check",
+                             [18] = "Machine check",
+                             [19] = "SIMD floating point Exception",
+                             [20] = "Virtualization Exception",
+                             [30] = "Security Exception"
+};
+
+void printPageFaultError(uint32_t errCode) {
+  printMessage(errCode & 0b10 ? "Invalid write" : "Invalid read");
+  printMessage(" on ");
+  printMessage(errCode & 0b1 ? "protected" : "absent");
+  printMessage(" page.");
+}
+
 void isrHandler(interruptRegisters* r) {
-    printMessage("Received interrupt: ");
-    char code[4];
-    int_to_ascii(r->intNumber, code);
-    printMessage(code);
-    printMessage(", error code: ");
-    int_to_ascii(r->errCode, code);
-    printMessage(code);
+    printMessage(exceptions[r->intNumber]);
+    if (r->intNumber == 14) {
+      printMessage(": ");
+      printPageFaultError(r->errCode);
+    }
     newline();
 }
 
@@ -106,6 +133,6 @@ void registerIsrCallback(unsigned char n, isrCallback handler) {
 
 void irqInstall() {
     asm volatile("sti");
-    init_timer(50);
+    //init_timer(50);
     init_keyboard();
 }
